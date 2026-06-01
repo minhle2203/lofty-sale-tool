@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Live Quote — Discount Integration Mockup</title>
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --surface: #ffffff;
+    --surface-alt: #fafbfc;
+    --border: #e3e6ea;
+    --border-strong: #c9ced5;
+    --text: #1a1f29;
+    --text-muted: #6b7280;
+    --text-subtle: #9aa1ab;
+    --primary: #2c7a4f;
+    --primary-hover: #235f3e;
+    --primary-soft: #e8f3ed;
+    --accent: #d85a30;
+    --accent-soft: #FBF6EE;
+    --accent-border: #F0E2C9;
+    --accent-pill: #f5e4ca;
+    --accent-text: #854F0B;
+    --warn-bg: #fff4e0;
+    --warn-border: #f5b955;
+    --warn-text: #8a5a00;
+    --danger-bg: #fdecec;
+    --danger-border: #e57373;
+    --danger-text: #a02020;
+    --info-bg: #eef4fb;
+    --info-border: #a7c3e1;
+    --info-text: #2a5685;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 32px 20px 64px;
+    min-height: 100vh;
+  }
+
+  .page-header {
+    max-width: 1280px;
+    margin: 0 auto 24px;
+  }
+  .page-header h1 {
+    font-size: 20px;
+    margin: 0 0 4px;
+    font-weight: 600;
+  }
+  .page-header p {
+    color: var(--text-muted);
+    margin: 0;
+    font-size: 13px;
+  }
+
+  /* Layout: left = package picker (simplified), right = Live Quote */
+  .layout {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 24px;
+  }
+
+  /* Package picker (simplified version of the screenshot) */
+  .package-picker {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+  }
+  .picker-head {
+    font-size: 11px;
+    color: var(--text-subtle);
+    letter-spacing: 0.6px;
+    margin-bottom: 4px;
+  }
+  .picker-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+  .picker-sub {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  .pkg-tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .pkg-card {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .pkg-card:hover {
+    border-color: var(--border-strong);
+  }
+  .pkg-card.selected {
+    border: 2px solid var(--text);
+    padding: 15px;
+  }
+  .pkg-card .pkg-check {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--text);
+    color: white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+  .pkg-card.selected .pkg-check { display: flex; }
+  .pkg-name {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+  .pkg-fees {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .pkg-fees div {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+  }
+  .pkg-fees .pkg-total {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* Banner shown when package change drops discounts */
+  .pkg-banner {
+    background: var(--warn-bg);
+    border: 1px solid var(--warn-border);
+    color: var(--warn-text);
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    margin-bottom: 16px;
+    display: none;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .pkg-banner.show { display: flex; }
+  .pkg-banner strong { font-weight: 600; }
+
+  /* Live Quote */
+  .quote-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    position: sticky;
+    top: 20px;
+    align-self: flex-start;
+  }
+  .quote-tag {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .quote-tag::before {
+    content: '';
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .quote-section-label {
+    font-size: 11px;
+    color: var(--text-subtle);
+    letter-spacing: 0.6px;
+    margin: 14px 0 10px;
+  }
+  .quote-product-name-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .quote-product-name {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .apply-discount-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-border);
+    color: var(--accent-text);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .apply-discount-btn:hover {
+    background: var(--accent-pill);
+    border-color: var(--accent);
+  }
+  .apply-discount-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .apply-discount-btn:disabled:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent-border);
+  }
+  .apply-discount-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Add-on block actions (Apply Discount + Remove X) */
+  .addon-block-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .addon-remove-btn {
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    padding: 0;
+    transition: all 0.15s;
+  }
+  .addon-remove-btn:hover {
+    color: var(--danger-text);
+    border-color: var(--danger-border);
+    background: var(--danger-bg);
+  }
+
+  /* Fee line */
+  .fee-line {
+    padding: 8px 0;
+    border-radius: 4px;
+    transition: background 0.1s;
+  }
+  .fee-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+  }
+  .fee-sub {
+    font-size: 11px;
+    color: var(--text-subtle);
+    margin-top: 3px;
+  }
+  .fee-amount {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .fee-strike {
+    text-decoration: line-through;
+    color: var(--text-subtle);
+    font-size: 11px;
+  }
+  .fee-final {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .fee-unit {
+    color: var(--text-muted);
+    font-size: 11px;
+  }
+
+  /* Discount icon affordance */
+  .discount-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    color: var(--text-subtle);
+    cursor: pointer;
+    opacity: 0.35;
+    transition: all 0.15s;
+    font-size: 13px;
+    border: 1px solid transparent;
+    background: transparent;
+  }
+  .fee-line:hover .discount-icon {
+    opacity: 1;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-color: var(--accent-border);
+  }
+  .discount-icon:hover {
+    transform: scale(1.1);
+  }
+  .discount-icon[data-disabled="true"] {
+    opacity: 0.2 !important;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* Highlighted (discounted) fee line */
+  .fee-line.discounted {
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-border);
+    padding: 10px 12px;
+    margin: 4px 0;
+  }
+  .fee-line.discounted .fee-sub {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+  }
+  .discount-pill {
+    background: var(--accent-pill);
+    color: var(--accent-text);
+    font-size: 10px;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-weight: 600;
+    margin-left: 6px;
+    letter-spacing: 0.2px;
+  }
+  .discount-actions {
+    display: flex;
+    gap: 12px;
+  }
+  .discount-actions a {
+    color: var(--info-text);
+    text-decoration: none;
+    font-size: 11px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .discount-actions a.danger { color: var(--danger-text); }
+  .discount-actions a:hover { text-decoration: underline; }
+
+  /* Add-ons section (left side picker) */
+  .addon-section {
+    margin-top: 24px;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+  }
+  .addon-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .addon-sub {
+    font-weight: 400;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+  .addon-list {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .addon-row {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--surface);
+  }
+  .addon-row:hover { border-color: var(--border-strong); }
+  .addon-row.added {
+    border: 1px solid var(--primary);
+    background: var(--primary-soft);
+  }
+  .addon-row-name {
+    font-weight: 500;
+    font-size: 13px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+  .addon-row-check {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+  .addon-row.added .addon-row-check { display: flex; }
+  .addon-row-variant {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .addon-row select {
+    margin-top: 6px;
+    padding: 4px 6px;
+    font-size: 11px;
+    width: 100%;
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    background: white;
+    cursor: pointer;
+  }
+
+  /* Add-on block in Live Quote */
+  .addon-block {
+    margin: 14px 0;
+    padding: 12px 0 0;
+    border-top: 1px dashed var(--border-strong);
+  }
+  .addon-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    gap: 8px;
+  }
+  .addon-block-name {
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+  .addon-block-variant-pill {
+    background: var(--accent-pill);
+    color: var(--accent-text);
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 9px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+
+  /* AI Bundle section */
+  .bundle-section {
+    margin: 14px 0 12px;
+    padding: 12px 0;
+    border-top: 1px dashed var(--border-strong);
+    border-bottom: 1px dashed var(--border-strong);
+  }
+    margin: 14px 0 12px;
+    padding: 12px 0;
+    border-top: 1px dashed var(--border-strong);
+    border-bottom: 1px dashed var(--border-strong);
+  }
+
+  /* Platform discount banner */
+  .platform-banner {
+    background: var(--info-bg);
+    border: 1px solid var(--info-border);
+    border-radius: 5px;
+    padding: 8px 11px;
+    margin: 12px 0;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--info-text);
+  }
+  .platform-banner.applied {
+    background: var(--accent-soft);
+    border-color: var(--accent-border);
+    color: var(--accent-text);
+  }
+  .platform-banner a {
+    color: inherit;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .platform-banner a:hover { text-decoration: underline; }
+
+  /* Totals */
+  .totals-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 4px 0;
+  }
+  .totals-row strong { font-weight: 600; }
+  .quote-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 10px 0;
+  }
+  .due-label {
+    font-size: 11px;
+    color: var(--text-subtle);
+    letter-spacing: 0.6px;
+    margin-top: 6px;
+  }
+  .due-amount {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 2px 0 10px;
+  }
+  .next-info {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .next-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+  .review-btn {
+    width: 100%;
+    background: var(--text);
+    color: white;
+    border: none;
+    padding: 11px;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .review-btn:hover { background: #000; }
+
+  /* ===== Modal ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 25, 32, 0.5);
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    z-index: 100;
+    padding: 60px 20px 20px;
+    overflow-y: auto;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+  .stepper {
+    display: flex;
+    align-items: center;
+    padding: 16px 22px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-subtle);
+    font-weight: 500;
+  }
+  .step.active { color: var(--text); }
+  .step.done { color: var(--primary); }
+  .step-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--text-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .step.active .step-num { background: var(--text); color: white; }
+  .step.done .step-num { background: var(--primary); color: white; }
+  .step-line { flex: 1; height: 1px; background: var(--border); margin: 0 12px; }
+  .step-line.filled { background: var(--primary); }
+  .modal-head {
+    padding: 16px 22px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-head h2 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+  }
+  .modal-head .close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 22px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 4px;
+  }
+  .modal-head .close:hover { color: var(--text); }
+  .form-body { padding: 14px 22px 6px; }
+  .field { margin-bottom: 14px; }
+  .field-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .field-label .req { color: var(--danger-text); }
+  .tooltip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 600;
+    cursor: help;
+    position: relative;
+  }
+  .tooltip-icon:hover { background: var(--text-muted); color: white; }
+  .tooltip-icon[data-tip]:hover::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: normal;
+    width: max-content;
+    max-width: 240px;
+    z-index: 10;
+    line-height: 1.4;
+    pointer-events: none;
+  }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  input[type="text"], input[type="number"], input[type="date"], select, textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: inherit;
+    background: white;
+    color: var(--text);
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--primary-soft);
+  }
+  textarea { resize: vertical; min-height: 60px; }
+  select[disabled] { background: #f7f8f9; color: var(--text); cursor: not-allowed; }
+  .helper {
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .input-with-prefix { position: relative; }
+  .input-with-prefix .prefix {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 13px;
+    pointer-events: none;
+  }
+  .input-with-prefix input { padding-left: 24px; }
+  .input-with-suffix .suffix {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 13px;
+    pointer-events: none;
+  }
+  .input-with-suffix input { padding-right: 28px; }
+  .alert {
+    margin: 8px 0;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+  .alert-warn { background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-text); }
+  .alert-danger { background: var(--danger-bg); border: 1px solid var(--danger-border); color: var(--danger-text); }
+  .alert-icon { flex-shrink: 0; font-weight: 600; }
+  .modal-foot {
+    padding: 14px 22px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background: var(--surface-alt);
+  }
+  .foot-actions { display: flex; gap: 8px; }
+  .btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-family: inherit;
+  }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--primary-hover); }
+  .btn-primary:disabled { background: var(--border-strong); cursor: not-allowed; }
+  .btn-secondary {
+    background: white;
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+  .btn-secondary:hover { background: var(--bg); }
+  .review-grid {
+    margin: 12px 22px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .review-row {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .review-row:last-child { border-bottom: none; }
+  .review-key {
+    padding: 9px 12px;
+    background: var(--surface-alt);
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 12px;
+  }
+  .review-val { padding: 9px 12px; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>New Order — Live Quote with Discount Integration</h1>
+  <p>Hover any fee line to reveal the discount icon. Click to open the popup. Change package to see discount-drop behavior.</p>
+</div>
+
+<div class="layout">
+
+  <!-- LEFT: Package picker -->
+  <div class="package-picker">
+    <div class="picker-head">NEW QUOTE</div>
+    <h2 class="picker-title">Build a subscription that fits.</h2>
+    <p class="picker-sub">Pick a package on the left, adjust fees in the Live Quote on the right. Discounts apply per fee line.</p>
+
+    <div class="pkg-banner" id="pkg-banner">
+      <span>⚠</span>
+      <span>You changed package — <strong>existing discounts have been removed</strong>. Discounts are tied to the selected package and don't transfer.</span>
+    </div>
+
+    <div class="pkg-tabs">
+      <div class="pkg-card selected" data-pkg="agent" onclick="selectPackage('agent')">
+        <div class="pkg-check">✓</div>
+        <div class="pkg-name">Lofty Agent</div>
+        <div class="pkg-fees">
+          <div><span>Onboarding</span><span>$399</span></div>
+          <div><span>Package /mo</span><span>$299</span></div>
+          <div><span>Seats (2 free)</span><span>$99/ea</span></div>
+          <div><span>MLS (5 free)</span><span>$5/ea</span></div>
+          <div><span>AI Bundle</span><span>$120/mo</span></div>
+          <div class="pkg-total"><span>From</span><span>$419/mo</span></div>
+        </div>
+      </div>
+
+      <div class="pkg-card" data-pkg="team" onclick="selectPackage('team')">
+        <div class="pkg-check">✓</div>
+        <div class="pkg-name">Lofty Team</div>
+        <div class="pkg-fees">
+          <div><span>Onboarding</span><span>$599</span></div>
+          <div><span>Package /mo</span><span>$649</span></div>
+          <div><span>Seats (5 free)</span><span>$99/ea</span></div>
+          <div><span>MLS (5 free)</span><span>$5/ea</span></div>
+          <div><span>AI Bundle</span><span>$260/mo</span></div>
+          <div class="pkg-total"><span>From</span><span>$909/mo</span></div>
+        </div>
+      </div>
+
+      <div class="pkg-card" data-pkg="broker15" onclick="selectPackage('broker15')">
+        <div class="pkg-check">✓</div>
+        <div class="pkg-name">Lofty Broker 15</div>
+        <div class="pkg-fees">
+          <div><span>Onboarding</span><span>$999</span></div>
+          <div><span>Package /mo</span><span>$999</span></div>
+          <div><span>Seats (15 free)</span><span>$60/ea</span></div>
+          <div><span>MLS (5 free)</span><span>$5/ea</span></div>
+          <div><span>AI Bundle</span><span>$400/mo</span></div>
+          <div class="pkg-total"><span>From</span><span>$1,549/mo</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD-ONS SECTION -->
+    <div class="addon-section">
+      <div class="addon-title">Add-ons <span class="addon-sub">— optional, pick variants below</span></div>
+      <div class="addon-list" id="addon-list"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Live Quote -->
+  <div class="quote-panel" id="quote-panel">
+    <div class="quote-tag">LIVE QUOTE</div>
+    <div class="quote-section-label">WHAT YOU'RE BUYING</div>
+    <div class="quote-product-name-row">
+      <div class="quote-product-name" id="q-product-name">Lofty Agent</div>
+      <button class="apply-discount-btn" onclick="openModal('package')">
+        <span class="apply-discount-icon">%</span>
+        Discount
+      </button>
+    </div>
+
+    <!-- Fee lines container — rendered by JS -->
+    <div id="fee-lines"></div>
+
+    <!-- AI Bundle section -->
+    <div class="bundle-section" id="bundle-section"></div>
+
+    <!-- Add-ons section in Live Quote -->
+    <div id="quote-addons"></div>
+
+    <!-- Totals -->
+    <div class="totals-row">
+      <span>Monthly</span>
+      <span id="q-monthly">$419.00<span class="fee-unit"> /mo</span></span>
+    </div>
+    <div class="totals-row">
+      <span>One-time</span>
+      <span id="q-onetime"><strong>$399.00</strong></span>
+    </div>
+
+    <hr class="quote-divider">
+
+    <div class="due-label">DUE TODAY</div>
+    <div class="due-amount" id="q-due">$399.00</div>
+
+    <div class="next-info">First bill: 1st of next month</div>
+    <div class="next-row">
+      <span style="color: var(--text-muted);">Next month</span>
+      <span id="q-next"><strong>$419.00</strong> /mo</span>
+    </div>
+
+    <button class="review-btn">Review order →</button>
+  </div>
+
+</div>
+
+<!-- ===== Apply Discount Modal ===== -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="stepper">
+      <div class="step active" id="step-indicator-1">
+        <div class="step-num">1</div>
+        <span>Configure</span>
+      </div>
+      <div class="step-line" id="step-line"></div>
+      <div class="step" id="step-indicator-2">
+        <div class="step-num">2</div>
+        <span>Review</span>
+      </div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div id="step-1">
+      <div class="modal-head">
+        <h2 id="modal-title">Apply Discount</h2>
+        <button class="close" onclick="closeModal()">×</button>
+      </div>
+
+      <div class="form-body">
+
+        <div class="field-row">
+          <div class="field">
+            <div class="field-label">
+              Simulate User Role <span class="req">*</span>
+              <span class="tooltip-icon" data-tip="Role xác định tier authority — mức discount tối đa được apply.">i</span>
+            </div>
+            <select id="sim-role">
+              <option value="rep">Sales Rep (no discount auth)</option>
+              <option value="senior" selected>Senior Rep (≤10% / $100)</option>
+              <option value="manager">Manager (≤25% / $500)</option>
+              <option value="admin">Admin (no limit)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <div class="field-label">
+              Fee <span class="req">*</span>
+              <span class="tooltip-icon" data-tip="Chọn loại phí muốn áp dụng discount.">i</span>
+            </div>
+            <select id="f-product">
+              <option value="package">Package Fee Discount</option>
+              <option value="seat">Seat Fee Discount</option>
+              <option value="mls">MLS Fee Discount</option>
+              <option value="activation">Activation Fee Discount</option>
+              <option value="aibundle">AI Bundle Fee Discount</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <div class="field-label">
+              Discount Type <span class="req">*</span>
+              <span class="tooltip-icon" data-tip="Fixed: trừ số $ cụ thể. Percentage: trừ theo %.">i</span>
+            </div>
+            <select id="f-type">
+              <option value="fixed">Fixed Amount</option>
+              <option value="percent">Percentage</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <div class="field-label">
+              Discount Value <span class="req">*</span>
+              <span class="tooltip-icon" data-tip="Với Seat Fee: số $ sẽ nhân với số seat chịu phí.">i</span>
+            </div>
+            <div class="input-with-prefix input-with-suffix">
+              <span class="prefix" id="value-prefix">$</span>
+              <input type="number" id="f-value" placeholder="0.00" min="0" step="0.01" value="10">
+              <span class="suffix hidden" id="value-suffix">%</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="alerts-area"></div>
+
+        <div class="field">
+          <div class="field-label">
+            Approval Reason
+            <span class="tooltip-icon" data-tip="Lý do áp dụng discount này. Ghi vào audit log.">i</span>
+          </div>
+          <textarea id="f-reason" placeholder="E.g., Competitive deal — matching offer from X. Strategic logo. Multi-year commitment in exchange for discount."></textarea>
+        </div>
+
+      </div>
+
+      <div class="modal-foot">
+        <div class="foot-actions">
+          <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" id="btn-next" onclick="goToStep2()">Continue to Review →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="step-2" class="hidden">
+      <div class="modal-head">
+        <h2>Review Discount</h2>
+        <button class="close" onclick="closeModal()">×</button>
+      </div>
+
+      <div class="review-grid">
+        <div class="review-row">
+          <div class="review-key">Fee</div>
+          <div class="review-val" id="r-product">Package Fee Discount</div>
+        </div>
+        <div class="review-row">
+          <div class="review-key">Discount Type</div>
+          <div class="review-val" id="r-type">Fixed Amount</div>
+        </div>
+        <div class="review-row">
+          <div class="review-key">Discount Value</div>
+          <div class="review-val" id="r-value"><strong>$10.00</strong></div>
+        </div>
+        <div class="review-row">
+          <div class="review-key">Approval Reason</div>
+          <div class="review-val" id="r-reason"><em style="color: var(--text-subtle);">— Not provided —</em></div>
+        </div>
+      </div>
+
+      <div class="modal-foot">
+        <div class="foot-actions">
+          <button class="btn btn-secondary" onclick="goToStep1()">← Back</button>
+          <button class="btn btn-primary" id="btn-apply" onclick="commitDiscount()">Apply Discount</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ========== Data ==========
+  const PACKAGES = {
+    agent: {
+      name: "Lofty Agent",
+      onboarding: 399, packageFee: 299, seatPrice: 99, seatFree: 2, seatCount: 2,
+      mlsPrice: 5, mlsFree: 5, mlsCount: 5,
+      aiBundle: 120, aiBundleName: "AI Platform Bundle — Agent"
+    },
+    team: {
+      name: "Lofty Team",
+      onboarding: 599, packageFee: 649, seatPrice: 99, seatFree: 5, seatCount: 5,
+      mlsPrice: 5, mlsFree: 5, mlsCount: 5,
+      aiBundle: 260, aiBundleName: "AI Platform Bundle — Team"
+    },
+    broker15: {
+      name: "Lofty Broker 15",
+      onboarding: 999, packageFee: 999, seatPrice: 60, seatFree: 15, seatCount: 15,
+      mlsPrice: 5, mlsFree: 5, mlsCount: 5,
+      aiBundle: 400, aiBundleName: "AI Platform Bundle — Broker 15"
+    }
+  };
+
+  // Add-on catalog: each add-on has variants with prices
+  const ADDONS = {
+    leadpond: {
+      name: "LeadPondMonthFee",
+      variants: {
+        OfficePonds:    { price: 50,  free: false },
+        OnePond:        { price: 50,  free: false },
+        OnePondFree:    { price: 0,   free: true  },
+        FivePonds:      { price: 125, free: false },
+        FivePondsFree:  { price: 0,   free: true  },
+        UnlimitedPonds: { price: 225, free: false }
+      },
+      defaultVariant: 'OfficePonds'
+    },
+    website: {
+      name: "Website",
+      variants: {
+        'Basic Group Website':   { price: 99,  free: false },
+        'Premium Website':       { price: 149, free: false },
+        'Enterprise Website':    { price: 249, free: false }
+      },
+      defaultVariant: 'Basic Group Website'
+    },
+    socialmedia: {
+      name: "Social Media",
+      variants: {
+        Starter:  { price: 79,  free: false },
+        Pro:      { price: 149, free: false }
+      },
+      defaultVariant: 'Starter'
+    },
+    smarthomeowner: {
+      name: "Smart Homeowner",
+      variants: {
+        Basic:    { price: 49, free: false },
+        Premium:  { price: 99, free: false }
+      },
+      defaultVariant: 'Basic'
+    }
+  };
+
+  const TIERS = {
+    rep:     { name: "Sales Rep", maxPct: 0,  maxAmt: 0 },
+    senior:  { name: "Senior Rep", maxPct: 10, maxAmt: 100 },
+    manager: { name: "Manager", maxPct: 25, maxAmt: 500 },
+    admin:   { name: "Admin", maxPct: 100, maxAmt: 99999 }
+  };
+
+  // State
+  let currentPkg = 'agent';
+  let discounts = {}; // { feeType: { type, value, reason } }
+  let editingFee = null; // current fee being edited via modal
+
+  // Add-on state
+  let activeAddons = {}; // { addonKey: variantName } — selected add-ons + their variant
+  let addonDiscounts = {}; // { addonKey: { type, value, reason } }
+  let editingAddon = null; // current add-on being edited via modal
+
+  // Fee line definitions
+  const FEE_DEFS = [
+    { key: 'package',    label: 'Package Fee',     getBase: p => p.packageFee, recurring: true,  unit: '/mo' },
+    { key: 'seat',       label: 'Seats Fee',       getBase: p => Math.max(0, p.seatCount - p.seatFree) * p.seatPrice, recurring: true, unit: '/mo' },
+    { key: 'mls',        label: 'MLS Fee',         getBase: p => Math.max(0, p.mlsCount - p.mlsFree) * p.mlsPrice, recurring: true, unit: '/mo' },
+    { key: 'activation', label: 'Onboarding Fee',  getBase: p => p.onboarding, recurring: false, unit: '' }
+  ];
+
+  // ========== Package selection ==========
+  function selectPackage(pkg) {
+    const hadDiscounts = Object.keys(discounts).length > 0 || Object.keys(addonDiscounts).length > 0;
+    if (pkg !== currentPkg && hadDiscounts) {
+      discounts = {};
+      addonDiscounts = {};
+      const banner = document.getElementById('pkg-banner');
+      banner.classList.add('show');
+      setTimeout(() => banner.classList.remove('show'), 5000);
+    }
+    currentPkg = pkg;
+    document.querySelectorAll('.pkg-card').forEach(c => c.classList.remove('selected'));
+    document.querySelector(`[data-pkg="${pkg}"]`).classList.add('selected');
+    renderQuote();
+  }
+
+  // ========== Render Live Quote ==========
+  function renderQuote() {
+    const pkg = PACKAGES[currentPkg];
+    document.getElementById('q-product-name').textContent = pkg.name;
+
+    // Render fee lines
+    const container = document.getElementById('fee-lines');
+    container.innerHTML = FEE_DEFS.map(def => renderFeeLine(def, pkg)).join('');
+
+    // Render AI Bundle (separate section)
+    document.getElementById('bundle-section').innerHTML = renderBundleSection(pkg);
+
+    // Render add-on list (left side picker)
+    renderAddonList();
+
+    // Render add-on blocks (right side Live Quote)
+    renderAddonBlocks();
+
+    // Totals
+    renderTotals(pkg);
+  }
+
+  // ========== Add-on rendering ==========
+  function renderAddonList() {
+    const list = document.getElementById('addon-list');
+    list.innerHTML = Object.keys(ADDONS).map(key => {
+      const addon = ADDONS[key];
+      const isAdded = activeAddons.hasOwnProperty(key);
+      const currentVariant = activeAddons[key] || addon.defaultVariant;
+      const variantPrice = addon.variants[currentVariant].price;
+      return `
+        <div class="addon-row ${isAdded ? 'added' : ''}" onclick="toggleAddon(event, '${key}')">
+          <div class="addon-row-name">
+            <span>${addon.name}</span>
+            <div class="addon-row-check">✓</div>
+          </div>
+          <div class="addon-row-variant">${isAdded ? currentVariant : 'Click to add'} · $${variantPrice}/mo</div>
+          ${isAdded ? `
+            <select onclick="event.stopPropagation()" onchange="changeAddonVariant('${key}', this.value)">
+              ${Object.keys(addon.variants).map(v => `<option value="${v}" ${v === currentVariant ? 'selected' : ''}>${v} · $${addon.variants[v].price}/mo</option>`).join('')}
+            </select>
+          ` : ''}
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderAddonBlocks() {
+    const container = document.getElementById('quote-addons');
+    const keys = Object.keys(activeAddons);
+    if (keys.length === 0) { container.innerHTML = ''; return; }
+
+    container.innerHTML = keys.map(key => {
+      const addon = ADDONS[key];
+      const variant = activeAddons[key];
+      const variantInfo = addon.variants[variant];
+      const base = variantInfo.price;
+      const disc = addonDiscounts[key];
+      const isFree = variantInfo.free;
+
+      // Header with consistent Apply Discount button + remove (X)
+      const header = `
+        <div class="addon-block-header">
+          <div class="addon-block-name">
+            ${addon.name}
+            <span class="addon-block-variant-pill">${variant.toUpperCase()}</span>
+          </div>
+          <div class="addon-block-actions">
+            <button class="apply-discount-btn" onclick="openAddonModal('${key}', ${!!disc})" ${isFree ? 'disabled' : ''} ${isFree ? 'title="This add-on is free"' : ''}>
+              <span class="apply-discount-icon">%</span>
+              ${disc ? 'Edit' : 'Discount'}
+            </button>
+            <button class="addon-remove-btn" onclick="removeAddonFromQuote('${key}')" title="Remove add-on from quote">×</button>
+          </div>
+        </div>
+      `;
+
+      // Fee row
+      if (!disc) {
+        return `
+          <div class="addon-block">
+            ${header}
+            <div class="fee-line">
+              <div class="fee-row">
+                <span style="font-size: 13px;">${variant}Fee</span>
+                <span style="font-size: 13px;">$${fmt(base)}<span class="fee-unit"> /mo</span></span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      const final = computeAddonFinal(base, disc);
+      const pillText = disc.type === 'fixed' ? '$' + fmt(disc.value) + ' OFF' : disc.value + '% OFF';
+      return `
+        <div class="addon-block">
+          ${header}
+          <div class="fee-line discounted">
+            <div class="fee-row">
+              <span style="font-size: 13px;">${variant}Fee<span class="discount-pill">${pillText}</span></span>
+              <div class="fee-amount">
+                <span class="fee-strike">$${fmt(base)}</span>
+                <span class="fee-final">$${fmt(final)}<span class="fee-unit"> /mo</span></span>
+              </div>
+            </div>
+            <div class="fee-sub">
+              <span>Applies for contract duration</span>
+              <span class="discount-actions">
+                <a onclick="openAddonModal('${key}', true)">✎ Edit</a>
+                <a class="danger" onclick="removeAddonDiscount('${key}')">✕ Remove</a>
+              </span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function toggleAddon(e, key) {
+    // If clicking inside the select dropdown, don't toggle
+    if (e.target.tagName === 'SELECT' || e.target.tagName === 'OPTION') return;
+
+    if (activeAddons.hasOwnProperty(key)) {
+      // Remove add-on
+      delete activeAddons[key];
+      delete addonDiscounts[key]; // discount auto-removes with add-on
+    } else {
+      // Add with default variant
+      activeAddons[key] = ADDONS[key].defaultVariant;
+    }
+    renderQuote();
+  }
+
+  function changeAddonVariant(key, newVariant) {
+    const oldVariant = activeAddons[key];
+    if (newVariant === oldVariant) return;
+    activeAddons[key] = newVariant;
+    // Drop discount on variant change (price changed → discount may not make sense)
+    if (addonDiscounts[key]) {
+      delete addonDiscounts[key];
+      showToast(`${ADDONS[key].name} variant changed — discount removed`);
+    }
+    renderQuote();
+  }
+
+  function removeAddonDiscount(key) {
+    delete addonDiscounts[key];
+    renderQuote();
+  }
+
+  function removeAddonFromQuote(key) {
+    delete activeAddons[key];
+    delete addonDiscounts[key]; // discount auto-removes with the add-on
+    renderQuote();
+  }
+
+  function computeAddonFinal(base, disc) {
+    if (base <= 0) return 0;
+    let final;
+    if (disc.type === 'percent') {
+      final = base * (1 - Math.min(disc.value, 100) / 100);
+    } else {
+      final = base - disc.value;
+    }
+    return Math.max(0, final);
+  }
+
+  function showToast(msg) {
+    // Reuse the package change banner — overload it briefly
+    const banner = document.getElementById('pkg-banner');
+    const original = banner.innerHTML;
+    banner.innerHTML = `<span>⚠</span><span>${msg}</span>`;
+    banner.classList.add('show');
+    setTimeout(() => {
+      banner.classList.remove('show');
+      banner.innerHTML = original;
+    }, 3500);
+  }
+
+  // ========== Add-on modal ==========
+  function openAddonModal(addonKey, isEdit) {
+    editingAddon = addonKey;
+    editingFee = null;
+
+    // Reuse the same modal — just configure it for add-on context
+    const productSelect = document.getElementById('f-product');
+    // Lock dropdown — add-on context is explicit, no choice to make
+    productSelect.disabled = true;
+
+    // Inject add-on option into dropdown temporarily so it can display
+    const addon = ADDONS[addonKey];
+    const variant = activeAddons[addonKey];
+    const tempLabel = `${addon.name} — ${variant} Discount`;
+    // Remove any previous temp option
+    document.querySelectorAll('#f-product option[data-temp]').forEach(o => o.remove());
+    const opt = document.createElement('option');
+    opt.value = '__addon__';
+    opt.textContent = tempLabel;
+    opt.setAttribute('data-temp', '1');
+    opt.setAttribute('selected', 'selected');
+    productSelect.appendChild(opt);
+    productSelect.value = '__addon__';
+
+    document.getElementById('modal-title').textContent = isEdit ? 'Edit Discount' : 'Apply Discount';
+
+    // Pre-fill if editing
+    const existing = addonDiscounts[addonKey];
+    if (isEdit && existing) {
+      document.getElementById('f-type').value = existing.type;
+      document.getElementById('f-value').value = existing.value;
+      document.getElementById('f-reason').value = existing.reason || '';
+    } else {
+      document.getElementById('f-type').value = 'fixed';
+      document.getElementById('f-value').value = 10;
+      document.getElementById('f-reason').value = '';
+    }
+    document.getElementById('f-type').disabled = false;
+
+    refreshModal();
+    goToStep1();
+    document.getElementById('modal-overlay').classList.add('show');
+  }
+
+  function renderFeeLine(def, pkg) {
+    const base = def.getBase(pkg);
+    const disc = discounts[def.key];
+    const disabled = base <= 0 && !disc;
+
+    if (!disc) {
+      return `
+        <div class="fee-line" data-fee="${def.key}">
+          <div class="fee-row">
+            <span>${def.label}</span>
+            <div class="fee-amount">
+              <span>${base > 0 ? '$' + fmt(base) : '$0.00'}<span class="fee-unit"> ${def.unit}</span></span>
+            </div>
+          </div>
+          ${getFeeSubText(def, pkg)}
+        </div>
+      `;
+    }
+
+    const final = computeFinal(base, disc, def, pkg);
+    const pillText = disc.type === 'fixed' ? '$' + fmt(disc.value) + ' OFF' : disc.value + '% OFF';
+    return `
+      <div class="fee-line discounted" data-fee="${def.key}">
+        <div class="fee-row">
+          <span>${def.label}<span class="discount-pill">${pillText}</span></span>
+          <div class="fee-amount">
+            <span class="fee-strike">$${fmt(base)}</span>
+            <span class="fee-final">$${fmt(final)}<span class="fee-unit"> ${def.unit}</span></span>
+          </div>
+        </div>
+        <div class="fee-sub">
+          <span>${describeDiscountSub(disc)}</span>
+          <span class="discount-actions">
+            <a onclick="openModal('${def.key}', true)">✎ Edit</a>
+            <a class="danger" onclick="removeDiscount('${def.key}')">✕ Remove</a>
+          </span>
+        </div>
+      </div>
+    `;
+  }
+
+  function getFeeSubText(def, pkg) {
+    if (def.key === 'seat') {
+      const charged = Math.max(0, pkg.seatCount - pkg.seatFree);
+      return `<div class="fee-sub">${pkg.seatCount} seats × $${pkg.seatPrice} · ${pkg.seatFree} free → ${charged} charged</div>`;
+    }
+    if (def.key === 'mls') {
+      const charged = Math.max(0, pkg.mlsCount - pkg.mlsFree);
+      return `<div class="fee-sub">${pkg.mlsCount} boards × $${pkg.mlsPrice} · ${pkg.mlsFree} free → ${charged} charged</div>`;
+    }
+    return '';
+  }
+
+  function renderBundleSection(pkg) {
+    const disc = discounts['aibundle'];
+    const base = pkg.aiBundle;
+    const labelLine = `<div style="font-size: 11px; color: var(--text-subtle); letter-spacing: 0.6px; margin-bottom: 8px;">AI PLATFORM BUNDLE</div>`;
+
+    if (!disc) {
+      return labelLine + `
+        <div class="fee-line" data-fee="aibundle">
+          <div class="fee-row">
+            <span>Account Monthly Fee</span>
+            <div class="fee-amount">
+              <span>$${fmt(base)}<span class="fee-unit"> /mo</span></span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    const final = computeFinal(base, disc, { key: 'aibundle' }, pkg);
+    const pillText = disc.type === 'fixed' ? '$' + fmt(disc.value) + ' OFF' : disc.value + '% OFF';
+    return labelLine + `
+      <div class="fee-line discounted" data-fee="aibundle">
+        <div class="fee-row">
+          <span>Account Monthly Fee<span class="discount-pill">${pillText}</span></span>
+          <div class="fee-amount">
+            <span class="fee-strike">$${fmt(base)}</span>
+            <span class="fee-final">$${fmt(final)}<span class="fee-unit"> /mo</span></span>
+          </div>
+        </div>
+        <div class="fee-sub">
+          <span>${describeDiscountSub(disc)}</span>
+          <span class="discount-actions">
+            <a onclick="openModal('aibundle', true)">✎ Edit</a>
+            <a class="danger" onclick="removeDiscount('aibundle')">✕ Remove</a>
+          </span>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderTotals(pkg) {
+    let monthlyBase = 0, monthlyFinal = 0, onetimeBase = 0, onetimeFinal = 0;
+
+    FEE_DEFS.forEach(def => {
+      const base = def.getBase(pkg);
+      const disc = discounts[def.key];
+      const final = disc ? computeFinal(base, disc, def, pkg) : base;
+      if (def.recurring) { monthlyBase += base; monthlyFinal += final; }
+      else { onetimeBase += base; onetimeFinal += final; }
+    });
+    // AI Bundle (recurring)
+    const aiBase = pkg.aiBundle;
+    const aiDisc = discounts['aibundle'];
+    const aiFinal = aiDisc ? computeFinal(aiBase, aiDisc, { key: 'aibundle' }, pkg) : aiBase;
+    monthlyBase += aiBase;
+    monthlyFinal += aiFinal;
+
+    // Add-ons (all recurring)
+    Object.keys(activeAddons).forEach(key => {
+      const addon = ADDONS[key];
+      const variant = activeAddons[key];
+      const base = addon.variants[variant].price;
+      const disc = addonDiscounts[key];
+      const final = disc ? computeAddonFinal(base, disc) : base;
+      monthlyBase += base;
+      monthlyFinal += final;
+    });
+
+    const monthlyHasDiscount = monthlyFinal < monthlyBase - 0.005;
+    const onetimeHasDiscount = onetimeFinal < onetimeBase - 0.005;
+
+    document.getElementById('q-monthly').innerHTML = monthlyHasDiscount
+      ? `<span class="fee-strike">$${fmt(monthlyBase)}</span> <strong>$${fmt(monthlyFinal)}</strong><span class="fee-unit"> /mo</span>`
+      : `<strong>$${fmt(monthlyFinal)}</strong><span class="fee-unit"> /mo</span>`;
+
+    document.getElementById('q-onetime').innerHTML = onetimeHasDiscount
+      ? `<span class="fee-strike">$${fmt(onetimeBase)}</span> <strong>$${fmt(onetimeFinal)}</strong>`
+      : `<strong>$${fmt(onetimeFinal)}</strong>`;
+
+    document.getElementById('q-due').textContent = '$' + fmt(onetimeFinal);
+    document.getElementById('q-next').innerHTML = `<strong>$${fmt(monthlyFinal)}</strong> /mo`;
+  }
+
+  // ========== Discount math ==========
+  function computeFinal(base, disc, def, pkg) {
+    if (base <= 0) return 0;
+    let final;
+    if (disc.type === 'percent') {
+      final = base * (1 - Math.min(disc.value, 100) / 100);
+    } else {
+      // Special: seat fee — multiply by charged seats
+      let sub = disc.value;
+      if (def.key === 'seat') {
+        const charged = Math.max(0, pkg.seatCount - pkg.seatFree);
+        sub = disc.value * charged;
+      }
+      final = base - sub;
+    }
+    return Math.max(0, final);
+  }
+
+  function describeDiscountSub(disc) {
+    return 'Applies for contract duration';
+  }
+
+  function removeDiscount(feeKey) {
+    delete discounts[feeKey];
+    renderQuote();
+  }
+
+  // ========== Modal ==========
+  function openModal(feeKey, isEdit) {
+    editingFee = feeKey;
+    const productMap = {
+      package: 'package', seat: 'seat', mls: 'package',
+      activation: 'activation', aibundle: 'aibundle', platform: 'platform'
+    };
+
+    const productSelect = document.getElementById('f-product');
+    productSelect.value = productMap[feeKey] || feeKey || 'package';
+
+    // Lock dropdown only when editing an existing discount (context is already fixed)
+    // Otherwise leave it open so user can choose which fee to discount
+    productSelect.disabled = !!isEdit;
+
+    document.getElementById('modal-title').textContent = isEdit ? 'Edit Discount' : 'Apply Discount';
+
+    // Pre-fill if editing
+    const existing = discounts[feeKey];
+    if (isEdit && existing) {
+      document.getElementById('f-type').value = existing.type;
+      document.getElementById('f-value').value = existing.value;
+      document.getElementById('f-reason').value = existing.reason || '';
+    } else {
+      document.getElementById('f-type').value = productSelect.value === 'platform' ? 'percent' : 'fixed';
+      document.getElementById('f-value').value = productSelect.value === 'platform' ? 5 : 10;
+      document.getElementById('f-reason').value = '';
+    }
+    // Platform fee discount must be percentage
+    document.getElementById('f-type').disabled = (productSelect.value === 'platform');
+
+    refreshModal();
+    goToStep1();
+    document.getElementById('modal-overlay').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('show');
+    // Clean up temp add-on option if any
+    document.querySelectorAll('#f-product option[data-temp]').forEach(o => o.remove());
+    editingAddon = null;
+  }
+
+  function goToStep1() {
+    document.getElementById('step-1').classList.remove('hidden');
+    document.getElementById('step-2').classList.add('hidden');
+    document.getElementById('step-indicator-1').classList.add('active');
+    document.getElementById('step-indicator-1').classList.remove('done');
+    document.getElementById('step-indicator-2').classList.remove('active');
+    document.getElementById('step-line').classList.remove('filled');
+  }
+
+  function goToStep2() {
+    refreshModal();
+    document.getElementById('step-1').classList.add('hidden');
+    document.getElementById('step-2').classList.remove('hidden');
+    document.getElementById('step-indicator-1').classList.remove('active');
+    document.getElementById('step-indicator-1').classList.add('done');
+    document.getElementById('step-indicator-2').classList.add('active');
+    document.getElementById('step-line').classList.add('filled');
+
+    // Populate review
+    const type = document.getElementById('f-type').value;
+    const value = parseFloat(document.getElementById('f-value').value) || 0;
+    const reason = document.getElementById('f-reason').value.trim();
+    const productLabel = document.querySelector('#f-product option[value="' + document.getElementById('f-product').value + '"]').textContent;
+
+    document.getElementById('r-product').textContent = productLabel;
+    document.getElementById('r-type').textContent = type === 'fixed' ? 'Fixed Amount' : 'Percentage';
+    document.getElementById('r-value').innerHTML = '<strong>' + (type === 'fixed' ? '$' + fmt(value) : value + '%') + '</strong>';
+    document.getElementById('r-reason').innerHTML = reason
+      ? reason.replace(/</g, '&lt;').replace(/\n/g, '<br>')
+      : '<em style="color: var(--text-subtle);">— Not provided —</em>';
+  }
+
+  function commitDiscount() {
+    const type = document.getElementById('f-type').value;
+    const value = parseFloat(document.getElementById('f-value').value) || 0;
+    const reason = document.getElementById('f-reason').value.trim();
+
+    if (editingAddon) {
+      // Save to add-on discounts
+      addonDiscounts[editingAddon] = { type, value, reason };
+      editingAddon = null;
+      // Clean up temp option
+      document.querySelectorAll('#f-product option[data-temp]').forEach(o => o.remove());
+    } else {
+      // Main package fee
+      const targetKey = document.getElementById('f-product').value;
+      discounts[targetKey] = { type, value, reason };
+    }
+    closeModal();
+    renderQuote();
+  }
+
+  function refreshModal() {
+    const type = document.getElementById('f-type').value;
+    document.getElementById('value-prefix').classList.toggle('hidden', type !== 'fixed');
+    document.getElementById('value-suffix').classList.toggle('hidden', type !== 'percent');
+
+    // Validation alerts
+    const role = document.getElementById('sim-role').value;
+    const tier = TIERS[role];
+    const value = parseFloat(document.getElementById('f-value').value) || 0;
+    const alerts = [];
+    if (tier.maxPct === 0) {
+      alerts.push({ kind: 'danger', msg: 'Your role does not have discount authority.' });
+    } else if (tier.maxPct < 100) {
+      if (type === 'percent' && value > tier.maxPct) {
+        alerts.push({ kind: 'warn', msg: `Discount ${value}% exceeds your authority (${tier.maxPct}%). Manager approval required.` });
+      }
+      if (type === 'fixed' && value > tier.maxAmt) {
+        alerts.push({ kind: 'warn', msg: `Discount $${fmt(value)} exceeds your authority ($${tier.maxAmt}). Manager approval required.` });
+      }
+    }
+    if (type === 'percent' && value > 100) {
+      alerts.push({ kind: 'warn', msg: 'Percentage cannot exceed 100%.' });
+    }
+    document.getElementById('alerts-area').innerHTML = alerts.map(a => `
+      <div class="alert alert-${a.kind}"><span class="alert-icon">${a.kind === 'danger' ? '⛔' : '⚠'}</span><span>${a.msg}</span></div>
+    `).join('');
+
+    // Disable Next if no authority or invalid
+    const nextBtn = document.getElementById('btn-next');
+    nextBtn.disabled = tier.maxPct === 0 || value <= 0;
+  }
+
+  // ========== Helpers ==========
+  function fmt(n) {
+    return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  // ========== Wire up modal inputs ==========
+  ['sim-role','f-product','f-type','f-value'].forEach(id => {
+    document.getElementById(id).addEventListener('input', refreshModal);
+    document.getElementById(id).addEventListener('change', refreshModal);
+  });
+
+  // Close modal on overlay click
+  document.getElementById('modal-overlay').addEventListener('click', e => {
+    if (e.target.id === 'modal-overlay') closeModal();
+  });
+
+  // Initial render
+  renderQuote();
+</script>
+
+</body>
+</html>
