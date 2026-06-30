@@ -57,13 +57,13 @@ python3 -m http.server 8766
 
 ### Data layer
 
-**`allPlans[]`** — 12 plans:
+**`allPlans[]`** — 9 plans:
 1. Lofty Agent(New) — $299/mo, 2 seats, AI Bundle Agent $120
 2. Lofty Team — $649/mo, 5 seats, AI Bundle Team $260 [MOST CHOSEN]
 3. Lofty Broker 15 — $999/mo, 15 seats, AI Copilot $10/seat
 4. Lofty Broker 50 — $1299/mo, 50 seats
 5. Lofty Enterprise(New) — $2299/mo, 100 seats
-6. CRM Only Seats, Blaze Website, Multi-Team (CRM/IDX), Bloom Agent (Elite/Starter/Growth)
+6. CRM Only Seats, Blaze Website, Multi-Team (CRM-Only), Multi-Team (IDX)
 
 Each plan: `{id, name, packageFee, includedSeats, seatPrice, freeMls, mlsPrice, addonBundle, addonPrice, defaultSeats, defaultMls, onboardingFee, aiCopilot, noPackageFee, noSeatFee, noMls, hasInstances, hasSeatFee, instancePrice, freeInstances, defaultInstances, maxSeats, included[]}`
 
@@ -89,7 +89,7 @@ Each variant: `{name, price, unit, billing, chargeType, feeName, hideMainFee?, e
 - `isOneTime: true` for one-time fees (SEO Premium, Website Design, Blaze DFY)
 
 ### Step 1: Configure (`#newSaleView`)
-- Plan carousel (12 cards, arrows/dots navigation)
+- Plan carousel (9 cards, arrows/dots navigation)
 - Click a plan → auto-add AI Bundle for that tier, populate Live Quote
 - Add-on simple list below: ADDED (N) section + AVAILABLE section. Click toggles add/remove (uses default first-priced variant).
 - Each addon in Live Quote = own section with name + variant pill + X remove + fee row + "Adjust tier" button + pen icon
@@ -155,7 +155,7 @@ Each customer: `{id, name, email, acctId, location, customerSince, planId, planN
 
 - **Main package** (`#us-main-card`):
   - Collapsible summary: "Currently {planName} · N seats · N MLS"
-  - TIER row: planName + Change tier button. Click → grid of 12 plans (Current badge, dashed blue border on current, solid blue on selected).
+  - TIER row: planName + Change tier button. Click → grid of 9 plans (Current badge, dashed blue border on current, solid blue on selected).
   - SEATS row: stepper + $X/seat/mo
   - MLS FEEDS row: stepper + $X/feed/mo
   - When SEATS/MLS/Tier changed: row expands to 3-col with `was X` strikethrough + ↻ undo button + uplift cell (+$X/mo + $X today)
@@ -303,7 +303,7 @@ Computes discount internally: `discountAmount = original - newPrice`, stores as 
 
 | Function | Purpose |
 |---|---|
-| `renderPlanCards()` | Render 12 plan cards |
+| `renderPlanCards()` | Render 9 plan cards |
 | `updateAll()` | Main render for New Sale Live Quote |
 | `addOrUpdateAddon(addonId, variant)` | Add/replace addon in selectedAddons |
 | `refreshAddonsList(query)` | Re-render addon ADDED+AVAILABLE list |
@@ -364,10 +364,10 @@ Onboarding Fee [One-time]  $X     ✎
   Fee Name                $X /mo  ✎
   Adjust tier
 
-Monthly                    $X /mo
-One-time                   $X
+Monthly                $X /mo  ✎
+One-time                   $X   ✎
 ═════════════════════ (qhr strong)
-DUE TODAY                       ✎
+DUE TODAY
 $X.XX
 First bill: 1st of next month
 

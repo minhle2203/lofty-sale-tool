@@ -48,7 +48,7 @@ No build step, no framework. Pure vanilla HTML + CSS + JS. Open `index.html` dir
 - `adjPriceCtx` — `{kind, feeKey, addonId, original}` — current adjust price modal (legacy/simple)
 
 ## Core data arrays
-- `allPlans[]` — 12 plans with `id, name, packageFee, seatPrice, mlsPrice, freeMls, includedSeats, addonBundle, addonPrice, hasInstances, hasSeatFee, noPackageFee, noMls, noSeatFee, maxSeats, aiCopilot, onboardingFee, defaultSeats, defaultMls, defaultInstances`
+- `allPlans[]` — 9 plans (Lofty Agent/Team/Broker15/Broker50/Enterprise, CRM Only Seats, Blaze Website, Multi-Team CRM-Only, Multi-Team IDX) with `id, name, packageFee, seatPrice, mlsPrice, freeMls, includedSeats, addonBundle, addonPrice, hasInstances, hasSeatFee, noPackageFee, noMls, noSeatFee, maxSeats, aiCopilot, onboardingFee, defaultSeats, defaultMls, defaultInstances`
 - `addons[]` — **6 add-ons** (New Sale): Website, Smart Homeowner, AI Platform Bundle, SEO, Website Design, Blaze DFY. Each has `{id, name, count, variants[], simpleAdjustTier?, subLabel?}`. Each variant: `{name, price, unit, billing, chargeType, feeName, hideMainFee?, extraFees?, extraBadges?}`
 - `UPSELL_ADDONS_CATALOG[]` — 19 add-ons (Upsell flow), separate from `addons[]`
 - `UPSELL_CUSTOMERS[]` — 3 mock customers (Benjamin, Sarah, Marcus) with `{id, name, email, acctId, location, planId, planName, seats, mls, status, customerSince, monthlyTotal, cycleEnds, cycleDaysRemaining, cycleLength, nextBill, nextBillShort, payment, ownedAddons[], activity[]}`
@@ -77,7 +77,7 @@ No build step, no framework. Pure vanilla HTML + CSS + JS. Open `index.html` dir
 ## Key functions (where to look)
 | Function | Purpose |
 |---|---|
-| `renderPlanCards()` | Render 12 plan cards in carousel |
+| `renderPlanCards()` | Render 9 plan cards in carousel |
 | `selectPackage()` (inside plan card click) | Plan selection — auto-adds AI Bundle, resets state |
 | `updateAll()` | Main render for New Sale Live Quote — fees + addons + totals |
 | `addOrUpdateAddon(addonId, variant)` | Add/replace addon in `selectedAddons[]` |

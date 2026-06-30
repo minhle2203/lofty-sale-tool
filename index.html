@@ -10,10 +10,72 @@
 :root{--bg:#FAF8F5;--white:#FFF;--text-primary:#1A1A1A;--text-secondary:#6B6B6B;--text-muted:#999;--border:#E5E2DD;--border-light:#EDEAE6;--green-badge:#3D7A3D;--green-light:#E8F5E8;--orange:#C4754B;--orange-bg:#F0DFD0;--card-bg:#FFF;--radius:12px;--radius-sm:8px;--font:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
 body{font-family:var(--font);background:var(--bg);color:var(--text-primary);-webkit-font-smoothing:antialiased;min-height:100vh}
 
-.top-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.top-nav{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.top-nav-inner{display:flex;align-items:center;justify-content:space-between;max-width:1240px;margin:0 auto;padding:16px 32px;position:relative}
+.version-badge{display:inline-flex;align-items:center;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;font-weight:600;color:var(--text-secondary);background:var(--white);border:1px solid var(--border);padding:4px 10px;border-radius:999px;letter-spacing:.3px}
 .top-nav-left{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--text-secondary)}
 .top-nav-left .brand{font-weight:700;color:var(--text-primary);font-size:17px}
 .stepper-nav{display:flex;align-items:center;gap:24px;position:absolute;left:50%;transform:translateX(-50%)}
+.top-nav-right{display:flex;align-items:center;gap:4px}
+.top-nav-link{font-family:var(--font);font-size:13px;font-weight:600;color:var(--text-secondary);background:transparent;border:none;cursor:pointer;padding:6px 12px;border-radius:6px;transition:background .15s}
+.top-nav-link:hover{background:#F5F0EA;color:var(--text-primary)}
+.top-nav-link.active{background:var(--text-primary);color:#fff}
+
+/* ============ DASHBOARD VIEW ============ */
+#dashboardView{display:none;padding:24px 32px;max-width:1800px;margin:0 auto}
+body.mode-dashboard #dashboardView{display:block}
+body.mode-dashboard .page-layout{display:none !important}
+body.mode-dashboard .stepper-nav{display:none !important}
+body.mode-dashboard .modal-overlay,body.mode-dashboard .disc-modal-overlay,body.mode-dashboard .adjtier-overlay,body.mode-dashboard .adjprice-overlay{display:none !important}
+.dash-header{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:24px}
+.dash-title{font-size:24px;font-weight:700;color:var(--text-primary);margin-bottom:4px}
+.dash-desc{font-size:13px;color:var(--text-muted)}
+.dash-header-right{display:flex;align-items:center;gap:12px}
+.hubspot-status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#047857;background:#ECFDF5;border:1px solid #A7F3D0;padding:6px 12px;border-radius:6px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#047857;animation:livePulse 2s ease-in-out infinite}
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.4}}
+.dash-csv-btn{font-family:var(--font);font-size:13px;font-weight:600;background:var(--text-primary);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.dash-csv-btn:hover{background:#000}
+.dl-caret{font-size:10px;opacity:.8}
+.dash-download-wrap{position:relative;display:inline-block}
+.dash-download-menu{position:absolute;top:calc(100% + 6px);right:0;background:var(--white);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.08);min-width:240px;padding:6px;z-index:50;display:none}
+.dash-download-menu.open{display:block}
+.dash-download-item{display:flex;flex-direction:column;align-items:flex-start;width:100%;background:transparent;border:none;padding:10px 12px;border-radius:6px;cursor:pointer;text-align:left;font-family:var(--font);gap:2px}
+.dash-download-item:hover{background:#FAF8F5}
+.dl-item-title{font-size:13px;font-weight:600;color:var(--text-primary)}
+.dl-item-sub{font-size:11px;color:var(--text-muted)}
+.dash-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.dash-stat{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px 18px}
+.dash-stat-label{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.dash-stat-value{font-size:22px;font-weight:700;color:var(--text-primary)}
+.text-green{color:#047857}
+.text-orange{color:#C4754B}
+.dash-filters{display:flex;gap:10px;margin-bottom:16px}
+.dash-search{flex:1;font-family:var(--font);font-size:13px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;outline:none;background:var(--white)}
+.dash-search:focus{border-color:var(--text-secondary)}
+.dash-select{font-family:var(--font);font-size:13px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--white);min-width:140px;cursor:pointer}
+.dash-table-wrap{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:auto;max-height:65vh}
+.dash-table{width:100%;border-collapse:collapse;font-size:12px;min-width:2000px}
+.dash-table thead{position:sticky;top:0;background:#FAF8F5;z-index:2}
+.dash-table th{font-weight:600;color:var(--text-secondary);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);white-space:nowrap;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+.dash-table td{padding:10px 12px;border-bottom:1px solid var(--border-light);white-space:nowrap;color:var(--text-primary)}
+.dash-table tbody tr:hover{background:#FAF8F5}
+.dash-agent-link{color:#2563EB;text-decoration:underline;text-underline-offset:2px;cursor:pointer;font-weight:600}
+.dash-agent-link:hover{color:#1D4ED8;text-decoration-thickness:2px}
+.dash-table tbody tr.new-order{animation:flashRow 1.5s ease-out}
+@keyframes flashRow{0%{background:#FEF3C7}100%{background:transparent}}
+.dash-status{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.3px;padding:3px 8px;border-radius:4px;white-space:nowrap}
+.dash-status.undefine{background:#F3F4F6;color:#6B7280;border:1px solid #D1D5DB}
+.dash-status.created{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A}
+.dash-status.valid{background:#ECFDF5;color:#047857;border:1px solid #A7F3D0}
+.dash-status.upgraded{background:#EDE9FE;color:#5B21B6;border:1px solid #C4B5FD}
+.dash-status.invalid{background:#FEE2E2;color:#991B1B;border:1px solid #FCA5A5}
+.dash-status.paid_end{background:#F3F4F6;color:#6B7280;border:1px solid #D1D5DB}
+.dash-status.price_change{background:#FFEDD5;color:#9A3412;border:1px solid #FDBA74}
+.dash-status.pause{background:#FEF9C3;color:#854D0E;border:1px solid #FDE047}
+.dash-footer{display:flex;align-items:center;padding:12px 4px;font-size:12px;color:var(--text-muted)}
+.dash-footer-spacer{flex:1}
+.dash-update-indicator{display:inline-flex;align-items:center;gap:6px}
 .step{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-muted);font-weight:500}
 .step.active .step-num{background:var(--text-primary);color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600}
 .step:not(.active) .step-num{font-size:14px}
@@ -105,6 +167,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-primary);-web
 .included-badge{display:inline-block;font-size:10px;font-weight:600;color:var(--green-badge);background:var(--green-light);padding:2px 8px;border-radius:4px;margin-left:6px}
 .included-price{color:var(--text-secondary);font-size:12px;font-weight:600;margin-left:auto;white-space:nowrap}
 .included-sub{font-size:11px;color:var(--text-muted);display:block;margin-top:1px}
+.included-list li.removed > span,
+.included-list li.removed .included-price{text-decoration:line-through;color:var(--text-muted)}
+.included-list .removed-sub{text-decoration:line-through;color:var(--text-muted)}
+.included-readd-btn{margin-left:6px;width:16px;height:16px;min-width:16px;flex-shrink:0;box-sizing:border-box;border:1px solid var(--accent-strong);background:var(--white);color:var(--accent-strong);font-size:12px;line-height:1;border-radius:50%;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;font-family:var(--font);font-weight:700}
+.included-readd-btn:hover{background:var(--accent-strong);color:#fff}
 .copilot-surcharge{font-size:11px;color:var(--orange);font-weight:600;margin-left:6px}
 
 .carousel-dots{display:flex;justify-content:center;gap:6px;margin-top:16px;margin-bottom:40px}
@@ -124,14 +191,21 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-primary);-web
 .quote-section-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px}
 .quote-plan-name{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
 .quote-plan-badge{font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;background:var(--orange-bg);color:var(--orange);padding:3px 8px;border-radius:4px}
-.quote-line{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:14px}
+.quote-line{display:flex;justify-content:space-between;align-items:center;padding:4px 8px;margin:0 -8px;font-size:14px;position:relative;border-radius:5px}
 .quote-line .q-label{font-weight:500}
 .quote-line .q-value{font-weight:600;white-space:nowrap}
+.quote-line:hover .q-value{visibility:hidden}
+.adjust-price-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:none;background:#1A1A1A;color:#fff;font-size:11px;font-weight:600;padding:6px 12px;border-radius:4px;cursor:pointer;border:none;z-index:3;letter-spacing:.2px;white-space:nowrap;font-family:inherit}
+.adjust-price-btn:hover{background:#000}
+.quote-line:hover .adjust-price-btn,.quote-total-row:hover .adjust-price-btn{display:inline-flex;align-items:center}
+.quote-line .fee-pen,.quote-total-row .fee-pen{display:none}
 .quote-stepper{display:inline-flex;align-items:center;gap:0;margin:4px 0}
 .quote-stepper .qs-btn{width:28px;height:28px;border:1px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--text-secondary);font-family:var(--font)}
 .quote-stepper .qs-btn:first-child{border-radius:6px 0 0 6px}
 .quote-stepper .qs-btn:last-child{border-radius:0 6px 6px 0}
-.quote-stepper .qs-val{width:36px;height:28px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+.quote-stepper .qs-val{width:48px;height:28px;border:none;border-top:1px solid var(--border);border-bottom:1px solid var(--border);text-align:center;font-size:13px;font-weight:600;font-family:var(--font);padding:0;background:var(--white);color:var(--text-primary);outline:none;-moz-appearance:textfield}
+.quote-stepper .qs-val:focus{background:#FBF6EE}
+.quote-stepper .qs-val::-webkit-outer-spin-button,.quote-stepper .qs-val::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .quote-stepper-info{font-size:12px;color:var(--text-muted);margin-left:10px}
 .quote-stepper-info .free-text{color:var(--green-badge);font-weight:600}
 .quote-onetime-badge{font-size:10px;font-weight:600;color:var(--orange);border:1px solid var(--orange);border-radius:3px;padding:1px 6px;margin-left:4px}
@@ -141,7 +215,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-primary);-web
 .quote-addon-remove:hover{background:#fee;color:#aa0000}
 .quote-addon-badge{font-size:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;background:var(--orange-bg);color:var(--orange);padding:2px 6px;border-radius:3px}
 .quote-totals{margin-top:20px;padding-top:16px;border-top:1px solid var(--border-light)}
-.quote-total-row{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;font-size:14px;font-weight:600}
+.quote-total-row{display:flex;justify-content:space-between;align-items:baseline;padding:4px 8px;margin:0 -8px;font-size:14px;font-weight:600;position:relative;border-radius:5px;transition:background .15s}
+.quote-total-row:hover > span:last-child{visibility:hidden}
 .quote-due{margin-top:20px}
 .quote-due-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px}
 .quote-due-label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
@@ -347,6 +422,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-primary);-web
 .quote-line.discounted .disc-row{display:flex;justify-content:space-between;align-items:center;width:100%}
 .discount-pill{display:inline-block;background:var(--accent-strong);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;margin-left:6px;letter-spacing:.4px}
 .fee-strike{text-decoration:line-through;color:var(--text-muted);font-weight:400;margin-right:6px;font-size:12px}
+.disc-desc{font-size:11px;color:var(--accent-strong);font-style:italic;line-height:1.4;padding:2px 0 6px 0}
 .fee-final{color:var(--accent-text);font-weight:700}
 .disc-sub{display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-top:6px;padding-top:6px;border-top:1px dashed var(--accent-border)}
 .disc-actions a{color:var(--accent-text);cursor:pointer;margin-left:8px;font-weight:600;text-decoration:none}
@@ -784,16 +860,23 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-primary);-web
 .us-charged-today .amt{font-size:20px;font-weight:800;color:#1e3a8a}
 .us-next-bill-sub{font-size:11px;color:var(--text-muted);margin-top:-6px;margin-bottom:8px}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 <nav class="top-nav">
-  <div class="top-nav-left"><span class="brand">Lofty</span><span style="color:var(--text-muted);margin:0 2px">/</span><span>New Order</span></div>
-  <div class="stepper-nav">
-    <div class="step active"><span class="step-num">1</span><span class="step-label">Configure</span></div>
-    <div class="step"><span class="step-num">2</span><span class="step-label">Review</span></div>
-    <div class="step"><span class="step-num">3</span><span class="step-label">Done</span></div>
+  <div class="top-nav-inner">
+    <div class="top-nav-left"><span class="brand">Lofty</span><span style="color:var(--text-muted);margin:0 2px">/</span><span id="topNavCrumb">New Order</span></div>
+    <div class="stepper-nav" id="stepperNav">
+      <div class="step active"><span class="step-num">1</span><span class="step-label">Configure</span></div>
+      <div class="step"><span class="step-num">2</span><span class="step-label">Review</span></div>
+      <div class="step"><span class="step-num">3</span><span class="step-label">Done</span></div>
+    </div>
+    <div class="top-nav-right">
+      <button class="top-nav-link active" id="navOrderBtn">New Order</button>
+      <button class="top-nav-link" id="navDashboardBtn">Dashboard</button>
+      <span class="version-badge" title="Prototype version">v0.0.1</span>
+    </div>
   </div>
-  <div style="width:120px"></div>
 </nav>
 
 <div class="page-layout">
@@ -872,12 +955,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-primary);-web
         <div class="quote-plan-name" id="quotePlanName"></div>
         <div id="quoteLines"></div>
         <div class="quote-totals">
-          <div class="quote-total-row"><span>Monthly</span><span id="quoteMonthly"></span></div>
-          <div class="quote-total-row"><span>One-time</span><span id="quoteOnetime"></span></div>
+          <div class="quote-total-row"><span>Monthly</span><span id="quoteMonthly"></span><button class="adjust-price-btn" onclick="openDiscModal('main','package',false)">Adjust Price</button></div>
+          <div class="quote-total-row"><span>One-time</span><span id="quoteOnetime"></span><button class="adjust-price-btn" onclick="openDiscModal('main','activation',false)">Adjust Price</button></div>
         </div>
         <div class="qhr strong"></div>
         <div class="quote-due">
-          <div class="quote-due-label-row"><span class="quote-due-label">DUE TODAY</span><button class="fee-pen" onclick="openDiscModal('main','activation',false)" title="Adjust price"><svg viewBox="0 0 16 16"><path d="M11.3 2.7a1.4 1.4 0 0 1 2 0l0 0a1.4 1.4 0 0 1 0 2L5 13l-3 1 1-3 8.3-8.3z"/></svg></button></div>
+          <div class="quote-due-label-row"><span class="quote-due-label">DUE TODAY</span></div>
           <div class="quote-due-amount" id="quoteDueToday"></div>
           <div class="quote-due-note">First bill: 1st of next month</div>
         </div>
@@ -1020,12 +1103,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-primary);-web
         <div class="quote-plan-name" id="quotePlanName2"></div>
         <div id="quoteLines2"></div>
         <div class="quote-totals">
-          <div class="quote-total-row"><span>Monthly</span><span id="quoteMonthly2"></span></div>
-          <div class="quote-total-row"><span>One-time</span><span id="quoteOnetime2"></span></div>
+          <div class="quote-total-row"><span>Monthly</span><span id="quoteMonthly2"></span><button class="adjust-price-btn" onclick="openDiscModal('main','package',false)">Adjust Price</button></div>
+          <div class="quote-total-row"><span>One-time</span><span id="quoteOnetime2"></span><button class="adjust-price-btn" onclick="openDiscModal('main','activation',false)">Adjust Price</button></div>
         </div>
         <div class="qhr strong"></div>
         <div class="quote-due">
-          <div class="quote-due-label-row"><span class="quote-due-label">DUE TODAY</span><button class="fee-pen" onclick="openDiscModal('main','activation',false)" title="Adjust price"><svg viewBox="0 0 16 16"><path d="M11.3 2.7a1.4 1.4 0 0 1 2 0l0 0a1.4 1.4 0 0 1 0 2L5 13l-3 1 1-3 8.3-8.3z"/></svg></button></div>
+          <div class="quote-due-label-row"><span class="quote-due-label">DUE TODAY</span></div>
           <div class="quote-due-amount" id="quoteDueToday2"></div>
           <div class="quote-due-note">First bill: 1st of next month</div>
         </div>
@@ -1212,15 +1295,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-primary);-web
     <div class="disc-modal-body">
       <h2 class="disc-modal-title-simple" id="discModalTitle">—</h2>
       <div class="disc-field">
-        <label>Simulate User Role *</label>
-        <select id="discRole">
-          <option value="rep">Sales Rep (no discount auth)</option>
-          <option value="senior" selected>Senior Rep (≤10% / $100)</option>
-          <option value="manager">Manager (≤25% / $500)</option>
-          <option value="admin">Admin (no limit)</option>
-        </select>
-      </div>
-      <div class="disc-field">
         <label>Discount Type *</label>
         <select id="discType">
           <option value="fixed">Fixed Amount</option>
@@ -1234,6 +1308,30 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-primary);-web
           <input type="number" id="discValue" min="0" step="0.01" value="10">
           <span class="suffix" id="discValueSuffix" style="display:none">%</span>
         </div>
+      </div>
+      <div class="disc-field">
+        <label>Duration *</label>
+        <select id="discDuration">
+          <option value="permanent">Permanent</option>
+          <option value="months">Months</option>
+          <option value="1month">1 Month</option>
+        </select>
+      </div>
+      <div class="disc-field" id="discMonthsRow" style="display:none">
+        <label>Number of Months *</label>
+        <select id="discMonths">
+          <option value="2">2 months</option>
+          <option value="3">3 months</option>
+          <option value="4">4 months</option>
+          <option value="5">5 months</option>
+          <option value="6">6 months</option>
+          <option value="7">7 months</option>
+          <option value="8">8 months</option>
+          <option value="9">9 months</option>
+          <option value="10">10 months</option>
+          <option value="11">11 months</option>
+          <option value="12">12 months</option>
+        </select>
       </div>
       <div id="discAlerts"></div>
       <div class="disc-field" style="margin-bottom:0">
@@ -1266,6 +1364,91 @@ body{font-family:var(--font);background:var(--bg);color:var(--text-primary);-web
     </div>
   </div>
 </div>
+
+<!-- ============ DASHBOARD VIEW ============ -->
+<div id="dashboardView">
+  <div class="dash-header">
+    <div>
+      <h1 class="dash-title">Orders Dashboard</h1>
+      <p class="dash-desc">All orders submitted via the quotation tool. Updates instantly when a new order is placed.</p>
+    </div>
+    <div class="dash-header-right">
+      <div class="dash-download-wrap">
+        <button class="dash-csv-btn" id="downloadToggleBtn">↓ Download <span class="dl-caret">▾</span></button>
+        <div class="dash-download-menu" id="downloadMenu">
+          <button class="dash-download-item" data-fmt="csv">
+            <span class="dl-item-title">Download CSV</span>
+            <span class="dl-item-sub">.csv · 2 KB</span>
+          </button>
+          <button class="dash-download-item" data-fmt="xlsx">
+            <span class="dl-item-title">Download Excel</span>
+            <span class="dl-item-sub">.xlsx · native Excel format</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dash-stats">
+    <div class="dash-stat"><div class="dash-stat-label">Total Orders</div><div class="dash-stat-value" id="statTotal">—</div></div>
+    <div class="dash-stat"><div class="dash-stat-label">Valid</div><div class="dash-stat-value text-green" id="statActive">—</div></div>
+    <div class="dash-stat"><div class="dash-stat-label">Created</div><div class="dash-stat-value text-orange" id="statPending">—</div></div>
+    <div class="dash-stat"><div class="dash-stat-label">Today's MRR Added</div><div class="dash-stat-value" id="statMrr">—</div></div>
+  </div>
+  <div class="dash-filters">
+    <input type="text" class="dash-search" id="dashSearch" placeholder="Search Order ID, Team Agent, Operate By...">
+    <select class="dash-select" id="dashFilterStatus">
+      <option value="">All status</option>
+      <option value="Undefine">Undefine</option>
+      <option value="Created">Created</option>
+      <option value="Valid">Valid</option>
+      <option value="Upgraded">Upgraded</option>
+      <option value="Invalid">Invalid</option>
+      <option value="Paid_End">Paid End</option>
+      <option value="Price_Change">Price Change</option>
+      <option value="Pause">Pause</option>
+    </select>
+    <select class="dash-select" id="dashFilterAgent">
+      <option value="">All agents</option>
+    </select>
+  </div>
+  <div class="dash-table-wrap">
+    <table class="dash-table" id="dashTable">
+      <thead>
+        <tr>
+          <th>Team Agent Name</th>
+          <th>Order ID</th>
+          <th>Status</th>
+          <th>Create Time</th>
+          <th>Start Time</th>
+          <th>Next Recurring Time</th>
+          <th>End Time</th>
+          <th>Upsell Owner</th>
+          <th>Related Order</th>
+          <th>Monthly Payment</th>
+          <th>Site Service</th>
+          <th>CRM Subscription</th>
+          <th>Seat Num</th>
+          <th>Buyer Package</th>
+          <th>Seller Package</th>
+          <th>Zipcode Dominator</th>
+          <th>Sphere Loudspeaker</th>
+          <th>Other Monthly Charge</th>
+          <th>Plan Discount</th>
+          <th>Management Fee</th>
+          <th>Contract Duration</th>
+          <th>Operate By</th>
+        </tr>
+      </thead>
+      <tbody id="dashTbody"></tbody>
+    </table>
+  </div>
+  <div class="dash-footer">
+    <span id="dashRowCount">0 orders</span>
+    <span class="dash-footer-spacer"></span>
+    <span class="dash-update-indicator"><span class="live-dot"></span> Live · auto-refresh every 5s</span>
+  </div>
+</div>
+
 <script>
 const checkSvg = '<svg viewBox="0 0 14 14"><polyline points="2 7 6 11 12 3"/></svg>';
 const penSvg = '<svg viewBox="0 0 16 16"><path d="M12.146 1.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-9.5 9.5a.5.5 0 0 1-.196.121l-3 1a.5.5 0 0 1-.633-.633l1-3a.5.5 0 0 1 .121-.196l9.5-9.5zm-1.5 1.793L3 10.586V13h2.414l7.646-7.646-2.414-2.415z"/></svg>';
@@ -1273,21 +1456,13 @@ const penSvg = '<svg viewBox="0 0 16 16"><path d="M12.146 1.146a.5.5 0 0 1 .708 
 // ============ ALL PLANS DATA ============
 const allPlans = [
   // Original 3
-  {id:'agent',name:'Lofty Agent(New)',badge:'MOST_CHOSEN:false',onboardingFee:399,onboardingPkg:'Essential Package',packageFee:299,includedSeats:2,seatPrice:99,defaultSeats:2,freeMls:5,defaultMls:5,mlsPrice:5,aiCopilot:null,addonBundle:'AI PLATFORM BUNDLE — AGENT',addonPrice:120,included:[{name:'IDX Website'},{name:'AI Copilot',badge:'Included'},{name:'AI Platform Bundle',price:120,sub:'AI Platform Bundle — Agent'}]},
-  {id:'team',name:'Lofty Team',mostChosen:true,onboardingFee:599,onboardingPkg:'Premier Package',packageFee:649,includedSeats:5,seatPrice:99,defaultSeats:5,freeMls:5,defaultMls:5,mlsPrice:5,aiCopilot:null,addonBundle:'AI PLATFORM BUNDLE — TEAM',addonPrice:260,included:[{name:'IDX Website'},{name:'AI Copilot',badge:'Included'},{name:'AI Platform Bundle',price:260,sub:'AI Platform Bundle — Team'}]},
-  {id:'broker15',name:'Lofty Broker 15',onboardingFee:999,onboardingPkg:'Premium Package',packageFee:999,includedSeats:15,seatPrice:60,defaultSeats:15,freeMls:5,defaultMls:5,mlsPrice:5,aiCopilot:{perSeat:10},addonBundle:'AI PLATFORM BUNDLE — BROKER 15',addonPrice:400,included:[{name:'IDX Website'},{name:'AI Copilot',surcharge:'+$10/seat'},{name:'AI Platform Bundle',price:400,sub:'AI Platform Bundle — Broker 15'}]},
+  {id:'agent',name:'Lofty Agent(New)',badge:'MOST_CHOSEN:false',onboardingFee:399,onboardingPkg:'Essential Package',packageFee:299,includedSeats:2,seatPrice:139,noAiSeatPrice:99,defaultSeats:2,freeMls:5,defaultMls:5,mlsPrice:5,aiCopilot:null,addonBundle:'AI PLATFORM BUNDLE — AGENT',addonPrice:120,included:[{name:'IDX Website'},{name:'AI Assistant',badge:'Included'},{name:'AI Platform Bundle',price:120,sub:'AI Platform Bundle — Agent'}]},
+  {id:'team',name:'Lofty Team',mostChosen:true,onboardingFee:599,onboardingPkg:'Premier Package',packageFee:649,includedSeats:5,seatPrice:139,noAiSeatPrice:99,defaultSeats:5,freeMls:5,defaultMls:5,mlsPrice:5,aiCopilot:null,addonBundle:'AI PLATFORM BUNDLE — TEAM',addonPrice:260,included:[{name:'IDX Website'},{name:'AI Assistant',badge:'Included'},{name:'AI Platform Bundle',price:260,sub:'AI Platform Bundle — Team'}]},
+  {id:'broker15',name:'Lofty Broker 15',onboardingFee:999,onboardingPkg:'Premium Package',packageFee:999,includedSeats:15,seatPrice:98,noAiSeatPrice:70,defaultSeats:15,freeMls:5,defaultMls:5,mlsPrice:5,aiCopilot:null,addonBundle:'AI PLATFORM BUNDLE — BROKER 15',addonPrice:400,included:[{name:'IDX Website'},{name:'AI Assistant',badge:'Included'},{name:'AI Platform Bundle',price:400,sub:'AI Platform Bundle — Broker 15'}]},
   // Package_1
-  {id:'broker50',name:'Lofty Broker 50',onboardingFee:1199,onboardingPkg:'Premium Plus Package',packageFee:1299,includedSeats:50,seatPrice:50,defaultSeats:50,freeMls:10,defaultMls:10,mlsPrice:5,aiCopilot:{perSeat:10},addonBundle:'AI PLATFORM BUNDLE — BROKER 50',addonPrice:1000,included:[{name:'IDX Website'},{name:'AI Copilot',surcharge:'+$10/seat'},{name:'AI Platform Bundle',price:1000,sub:'AI Platform Bundle — Broker 50'}]},
-  {id:'enterprise',name:'Lofty Enterprise(New)',onboardingFee:1499,onboardingPkg:'Enterprise Package',packageFee:2299,includedSeats:100,seatPrice:19,defaultSeats:100,freeMls:10,defaultMls:10,mlsPrice:5,aiCopilot:null,addonBundle:'AI PLATFORM BUNDLE — ENTERPRISE',addonPrice:1201,included:[{name:'IDX Website'},{name:'AI Copilot',badge:'Free'},{name:'AI Platform Bundle',price:1201,sub:'AI Platform Bundle — Enterprise'}]},
-  {id:'crmonly',name:'CRM Only Seats',onboardingFee:399,onboardingPkg:'Essential Package',packageFee:0,includedSeats:1,seatPrice:35,defaultSeats:1,freeMls:0,defaultMls:0,mlsPrice:0,aiCopilot:null,addonBundle:null,addonPrice:0,noPackageFee:true,noMls:true,included:[]},
-  // Package_3 (order before Package_2)
-  {id:'blaze',name:'Blaze Website',onboardingFee:499,onboardingPkg:'DFY Launch',packageFee:0,includedSeats:1,seatPrice:199,defaultSeats:1,freeMls:0,defaultMls:0,mlsPrice:0,aiCopilot:null,addonBundle:null,addonPrice:0,noPackageFee:true,noMls:true,maxSeats:1,included:[]},
-  {id:'multicrm',name:'Multi-Team (CRM-Only)',onboardingFee:999,onboardingPkg:'Premium Package',packageFee:0,includedSeats:0,seatPrice:20,defaultSeats:100,freeMls:5,defaultMls:5,mlsPrice:5,aiCopilot:null,addonBundle:null,addonPrice:0,noPackageFee:true,hasSeatFee:true,hasInstances:true,instancePrice:25,freeInstances:50,defaultInstances:50,included:[]},
+  {id:'broker50',name:'Lofty Broker 50',onboardingFee:1199,onboardingPkg:'Premium Plus Package',packageFee:1299,includedSeats:50,seatPrice:106,noAiSeatPrice:60,defaultSeats:50,freeMls:10,defaultMls:10,mlsPrice:5,aiCopilot:null,addonBundle:'AI PLATFORM BUNDLE — BROKER 50',addonPrice:1000,included:[{name:'IDX Website'},{name:'AI Assistant',badge:'Included'},{name:'AI Platform Bundle',price:1000,sub:'AI Platform Bundle — Broker 50'}]},
+  {id:'enterprise',name:'Lofty Enterprise(New)',onboardingFee:1499,onboardingPkg:'Enterprise Package',packageFee:2299,includedSeats:100,seatPrice:32,noAiSeatPrice:25,defaultSeats:100,freeMls:10,defaultMls:10,mlsPrice:5,aiCopilot:null,addonBundle:'AI PLATFORM BUNDLE — ENTERPRISE',addonPrice:1201,seatPriceTiers:[{min:100,max:250,price:32},{min:251,max:500,price:30},{min:501,max:1500,price:25},{min:1501,max:3000,price:22},{min:3001,max:5000,price:21},{min:5001,max:10000,price:20},{min:10001,max:Infinity,price:17}],noAiSeatPriceTiers:[{min:100,max:250,price:25},{min:251,max:500,price:23},{min:501,max:1500,price:19},{min:1501,max:3000,price:17},{min:3001,max:5000,price:16},{min:5001,max:10000,price:15},{min:10001,max:Infinity,price:13}],included:[{name:'IDX Website'},{name:'AI Assistant',badge:'Free'},{name:'AI Platform Bundle',price:1201,sub:'AI Platform Bundle — Enterprise'}]},
   {id:'multiidx',name:'Multi-Team (IDX)',onboardingFee:1499,onboardingPkg:'Enterprise Package',packageFee:0,includedSeats:0,seatPrice:15,defaultSeats:50,freeMls:5,defaultMls:5,mlsPrice:5,aiCopilot:null,addonBundle:null,addonPrice:0,noPackageFee:true,hasSeatFee:true,hasInstances:true,instancePrice:200,freeInstances:0,defaultInstances:5,included:[{name:'IDX Website'}]},
-  // Package_2
-  {id:'bloom-elite',name:'Bloom Agent Elite',onboardingFee:499,onboardingPkg:'Bloom Package',packageFee:999,includedSeats:1,seatPrice:0,defaultSeats:1,freeMls:5,defaultMls:5,mlsPrice:20,aiCopilot:null,addonBundle:null,addonPrice:0,noSeatFee:true,included:[{name:'IDX Website'}]},
-  {id:'bloom-starter',name:'Bloom Agent Starter',onboardingFee:499,onboardingPkg:'Bloom Package',packageFee:699,includedSeats:1,seatPrice:0,defaultSeats:1,freeMls:0,defaultMls:0,mlsPrice:0,aiCopilot:null,addonBundle:null,addonPrice:0,noSeatFee:true,noMls:true,included:[{name:'IDX Website'}]},
-  {id:'bloom-growth',name:'Bloom Agent Growth',onboardingFee:499,onboardingPkg:'Bloom Package',packageFee:799,includedSeats:1,seatPrice:0,defaultSeats:1,freeMls:5,defaultMls:5,mlsPrice:20,aiCopilot:null,addonBundle:null,addonPrice:0,noSeatFee:true,included:[{name:'IDX Website'}]},
 ];
 
 const addons = [
@@ -1320,6 +1495,19 @@ const addons = [
     {name:'DFY Launch',price:499,billing:'One-time',chargeType:'onetime',feeName:'DFY Launch (One-time fee)'},
     {name:'DFY Grow',price:1299,billing:'One-time',chargeType:'onetime',feeName:'DFY Grow (One-time fee)'},
     {name:'DFY Scale',price:2999,billing:'One-time',chargeType:'onetime',feeName:'DFY Scale (One-time fee)'}
+  ]},
+  {id:'dialer-text',name:'Dialer Text',count:'2 options',subLabel:'seat',variants:[
+    {name:'Growth 5000 texts/mo',price:49,unit:'/mo',billing:'Monthly',chargeType:'prorated',feeName:'Text Package Cost per month'},
+    {name:'Elite 10000 texts/mo',price:89,unit:'/mo',billing:'Monthly',chargeType:'prorated',feeName:'Text Package Cost per month'}
+  ]},
+  {id:'dialer-call',name:'Dialer Call',count:'4 options',subLabel:'seat',variants:[
+    {name:'Growth 500 mins talk/mo',price:15,unit:'/mo',billing:'Monthly',chargeType:'prorated',feeName:'Call Package Cost per month'},
+    {name:'Elite Unlimited mins talk/mo',price:79,unit:'/mo',billing:'Monthly',chargeType:'prorated',feeName:'Call Package Cost per month'},
+    {name:'Three Line Dialer Unlimited mins talk/mo',price:119,unit:'/mo',billing:'Monthly',chargeType:'prorated',feeName:'Call Package Cost per month'},
+    {name:'Basic 100 mins talk/mo',price:0,unit:'/mo',billing:'Monthly',chargeType:'prorated',feeName:'Call Package Cost per month'}
+  ]},
+  {id:'office-addon',name:'Office Add-On',count:'1 option',variants:[
+    {name:'Office_Add_On',price:299,unit:'/mo',billing:'Monthly',chargeType:'prorated',feeName:'Office Add-On Monthly Fee'}
   ]}
 ];
 
@@ -1370,10 +1558,10 @@ function renderPlanCards() {
       html += `<div class="fee-detail-stepper"><div class="stepper-control"><button class="step-btn card-seat-minus">−</button><div class="step-val card-seat-val">${p.defaultSeats}</div><button class="step-btn card-seat-plus">+</button></div><span class="stepper-info">seats × $${p.seatPrice}${p.includedSeats?' · <span class="free-text">'+p.includedSeats+' free</span>':''}${p.maxSeats?' · Max '+p.maxSeats:''}</span></div>`;
     }
 
-    // AI Copilot
+    // AI Assistant (legacy: per-seat surcharge — currently disabled for all plans, kept for future use)
     if (p.aiCopilot) {
       const aiTotal = p.defaultSeats * p.aiCopilot.perSeat;
-      html += `<div class="ai-copilot-row"><div class="fee-row"><span class="fee-name">AI Copilot</span><span class="ai-copilot-formula">${p.defaultSeats} × $${p.aiCopilot.perSeat} = $${aiTotal} <span class="unit">/mo</span></span></div><div class="ai-copilot-sub">Surcharge $${p.aiCopilot.perSeat}/seat on top of plan</div></div>`;
+      html += `<div class="ai-copilot-row"><div class="fee-row"><span class="fee-name">AI Assistant</span><span class="ai-copilot-formula">${p.defaultSeats} × $${p.aiCopilot.perSeat} = $${aiTotal} <span class="unit">/mo</span></span></div><div class="ai-copilot-sub">Surcharge $${p.aiCopilot.perSeat}/seat on top of plan</div></div>`;
     }
 
     // Instances Fee
@@ -1402,7 +1590,7 @@ function renderPlanCards() {
     if (!p.noSeatFee) breakdown += `${breakdown?' · ':''}Seats $0`;
     if (p.hasSeatFee) { const sf=Math.max(0,p.defaultSeats-p.includedSeats)*p.seatPrice; breakdown += `${breakdown?' · ':''}Seats $${sf}`; }
     if (p.hasInstances) { const inf=Math.max(0,p.defaultInstances-p.freeInstances)*p.instancePrice; breakdown += `${breakdown?' · ':''}Instances $${inf}`; }
-    if (p.aiCopilot) breakdown += ` · AI Copilot $${p.defaultSeats*p.aiCopilot.perSeat}`;
+    if (p.aiCopilot) breakdown += ` · AI Assistant $${p.defaultSeats*p.aiCopilot.perSeat}`;
     if (p.addonPrice) breakdown += ` · Add-ons $${p.addonPrice}`;
 
     html += `<div class="monthly-wrapper"><div class="monthly-badge">MONTHLY</div><div class="monthly-box"><div class="monthly-label">EST. MONTHLY TOTAL</div><div class="monthly-total">$${monthlyTotal} <span class="unit">/mo</span></div><div class="monthly-breakdown">${breakdown}</div></div></div>`;
@@ -1410,13 +1598,19 @@ function renderPlanCards() {
     // Included
     if (p.included && p.included.length) {
       html += `<div class="included-label">INCLUDED</div><ul class="included-list">`;
-      p.included.forEach(inc => {
-        html += `<li><span>${inc.name}</span>`;
+      p.included.forEach((inc, idx) => {
+        const isAiBundle = /ai platform bundle/i.test(inc.name);
+        const liClass = isAiBundle ? ' data-ai-bundle="1"' : '';
+        html += `<li${liClass}><span>${inc.name}</span>`;
         if (inc.badge) html += `<span class="included-badge">${inc.badge}</span>`;
         if (inc.surcharge) html += `<span class="copilot-surcharge">${inc.surcharge}</span>`;
         if (inc.price) html += `<span class="included-price">$${inc.price} <span class="unit">/mo</span></span>`;
+        if (isAiBundle) html += `<button class="included-readd-btn" data-readd-ai="1" title="Re-add AI Platform Bundle" style="display:none">+</button>`;
         html += `</li>`;
-        if (inc.sub) html += `<div style="padding-left:14px;margin-top:2px"><span class="included-sub">${inc.sub}</span></div>`;
+        if (inc.sub) {
+          const subClass = isAiBundle ? ' ai-bundle-sub' : '';
+          html += `<div style="padding-left:14px;margin-top:2px"${isAiBundle?' data-ai-bundle-sub="1"':''}><span class="included-sub${subClass}">${inc.sub}</span></div>`;
+        }
       });
       html += `</ul>`;
     } else {
@@ -1544,6 +1738,37 @@ document.addEventListener('click', (e) => {
   updateAll();
 }, true);
 
+// Quote sidebar editable inputs (seat / mls / inst / addon qty)
+document.addEventListener('change', (e) => {
+  const inp = e.target.closest('input.qs-val[data-input]');
+  if (!inp) return;
+  const plan = allPlans.find(p=>p.id===selectedPlan);
+  if (!plan) return;
+  let val = parseInt(inp.value, 10);
+  if (isNaN(val) || val < 1) val = 1;
+  const type = inp.dataset.input;
+  if (type === 'seat') {
+    if (plan.maxSeats) val = Math.min(val, plan.maxSeats);
+    currentSeats = val;
+  } else if (type === 'mls') {
+    currentMls = val;
+  } else if (type === 'inst') {
+    currentInstances = Math.max(0, parseInt(inp.value, 10) || 0);
+  } else if (type === 'addon') {
+    const id = inp.dataset.addonId;
+    const a = selectedAddons.find(x => x.addonId === id);
+    if (a) a.qty = val;
+  }
+  updateAll();
+});
+// Also commit on Enter
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter') return;
+  const inp = e.target.closest('input.qs-val[data-input]');
+  if (!inp) return;
+  inp.blur();
+});
+
 // ============ PLAN SELECTION ============
 document.getElementById('plansCarousel').addEventListener('click', (e) => {
   if (e.target.closest('button.step-btn')) return;
@@ -1579,10 +1804,63 @@ document.getElementById('plansCarousel').addEventListener('click', (e) => {
     });
   }
   updateAddonSidebarForPlan(plan);
+  refreshCardAiBundleState();
   updateAll();
 });
 
 // ============ UPDATE ALL ============
+// True when the selected plan offers an AI Bundle AND the user has it in their cart.
+// Plans without addonBundle (e.g. Multi-Team IDX) always treated as "with AI" baseline.
+function hasAiBundleSelected() {
+  const p = allPlans.find(pl => pl.id === selectedPlan);
+  if (!p || !p.addonBundle) return true;
+  return selectedAddons.some(a => a.addonId === 'ai-bundle');
+}
+
+// Effective seat price for a single extra seat (used in stepper "× $X" display).
+// For tiered plans, returns the rate of the band where the CURRENT total seat count falls.
+function effectiveSeatPrice(plan) {
+  const noAi = !hasAiBundleSelected();
+  const tiers = (noAi && plan.noAiSeatPriceTiers) ? plan.noAiSeatPriceTiers : plan.seatPriceTiers;
+  if (tiers && tiers.length) {
+    const n = Math.max(currentSeats, (plan.includedSeats || 0) + 1);
+    for (const tier of tiers) {
+      const bandEnd = tier.max === Infinity ? Number.MAX_SAFE_INTEGER : tier.max;
+      if (n >= tier.min && n <= bandEnd) return tier.price;
+    }
+    return tiers[tiers.length - 1].price;
+  }
+  if (noAi && plan.noAiSeatPrice != null) return plan.noAiSeatPrice;
+  return plan.seatPrice || 0;
+}
+
+// Tiered seat fee — when plan.seatPriceTiers exists, prices each extra seat per band
+// based on its total-seat position (marginal/progressive). Falls back to flat seatPrice.
+// Picks noAi* variant when AI Bundle is not selected.
+function tieredSeatsFee(plan, totalSeats) {
+  const included = plan.includedSeats || 0;
+  const extra = Math.max(0, totalSeats - included);
+  if (!extra) return 0;
+  const noAi = !hasAiBundleSelected();
+  const tiers = (noAi && plan.noAiSeatPriceTiers) ? plan.noAiSeatPriceTiers : plan.seatPriceTiers;
+  const flat = (noAi && plan.noAiSeatPrice != null) ? plan.noAiSeatPrice : (plan.seatPrice || 0);
+  if (!tiers || !tiers.length) return extra * flat;
+  let fee = 0;
+  let counted = included; // seats already priced (free first)
+  let remaining = extra;
+  for (const tier of tiers) {
+    if (remaining <= 0) break;
+    const bandEnd = tier.max === Infinity ? Number.MAX_SAFE_INTEGER : tier.max;
+    if (counted >= bandEnd) continue;
+    const capacity = bandEnd - counted;
+    const take = Math.min(remaining, capacity);
+    fee += take * tier.price;
+    counted += take;
+    remaining -= take;
+  }
+  return fee;
+}
+
 function updateAll() {
   if (!selectedPlan) return;
   const p = allPlans.find(pl=>pl.id===selectedPlan);
@@ -1590,7 +1868,7 @@ function updateAll() {
 
   // Calculations
   const extraSeats = Math.max(0, currentSeats - p.includedSeats);
-  const seatsFee = extraSeats * (p.seatPrice||0);
+  const seatsFee = tieredSeatsFee(p, currentSeats);
   const extraMls = p.noMls ? 0 : Math.max(0, currentMls - p.freeMls);
   const mlsFee = p.noMls ? 0 : extraMls * (p.mlsPrice||0);
   const extraInst = p.hasInstances ? Math.max(0, currentInstances - (p.freeInstances||0)) : 0;
@@ -1616,10 +1894,10 @@ function updateAll() {
 
   document.getElementById('quotePlanName').innerHTML = `${p.name} <span class="quote-plan-badge">${p.name.toUpperCase()}</span>`;
 
-  // Helper to build inline pen icon
+  // Helper to build hover "Adjust Price" button
   const penFor = (feeKey) => {
     const has = !!packageDiscounts[feeKey];
-    return `<button class="fee-pen${has?' has-disc':''}" onclick="openDiscModal('main','${feeKey}',${has})" title="${has?'Edit price':'Adjust price'}"><svg viewBox="0 0 16 16"><path d="M11.3 2.7a1.4 1.4 0 0 1 2 0l0 0a1.4 1.4 0 0 1 0 2L5 13l-3 1 1-3 8.3-8.3z"/></svg></button>`;
+    return `<button class="adjust-price-btn" onclick="openDiscModal('main','${feeKey}',${has})">${has?'Edit Price':'Adjust Price'}</button>`;
   };
 
   // Seats Fee — with discount support
@@ -1627,47 +1905,47 @@ function updateAll() {
     const seatDisc = packageDiscounts['seat'];
     if (seatDisc) {
       const final = computeDiscountedFee(seatsFee, seatDisc, 'seat', p);
-      linesHtml += `<div class="quote-line"><span class="q-label">Seats Fee</span><span class="q-value"><span class="fee-strike">$${seatsFee.toFixed(2)}</span> <strong>$${final.toFixed(2)}</strong> <span class="unit">/mo</span>${penFor('seat')}</span></div>`;
+      linesHtml += `<div class="quote-line"><span class="q-label">Seats Fee</span><span class="q-value"><span class="fee-strike">$${seatsFee.toFixed(2)}</span> <strong>$${final.toFixed(2)}</strong> <span class="unit">/mo</span></span>${penFor('seat')}</div>${discDescRow(seatDisc,'Seat Fee')}`;
     } else {
-      linesHtml += `<div class="quote-line"><span class="q-label">Seats Fee</span><span class="q-value">$${seatsFee.toFixed(2)} <span class="unit">/mo</span>${penFor('seat')}</span></div>`;
+      linesHtml += `<div class="quote-line"><span class="q-label">Seats Fee</span><span class="q-value">$${seatsFee.toFixed(2)} <span class="unit">/mo</span></span>${penFor('seat')}</div>`;
     }
-    linesHtml += `<div style="display:flex;align-items:center;gap:10px;padding:6px 0"><div class="quote-stepper"><button class="qs-btn" data-action="seat-">−</button><div class="qs-val">${currentSeats}</div><button class="qs-btn" data-action="seat+">+</button></div><span class="quote-stepper-info">seats × $${p.seatPrice.toFixed(2)} · <span class="free-text">${p.includedSeats} free</span></span></div>`;
+    linesHtml += `<div style="display:flex;align-items:center;gap:10px;padding:6px 0"><div class="quote-stepper"><button class="qs-btn" data-action="seat-">−</button><input class="qs-val" type="number" min="1" value="${currentSeats}" data-input="seat" inputmode="numeric"><button class="qs-btn" data-action="seat+">+</button></div><span class="quote-stepper-info">seats × $${effectiveSeatPrice(p).toFixed(2)} · <span class="free-text">${p.includedSeats} free</span></span></div>`;
   }
   // Package Fee — with discount support
   if (!p.noPackageFee) {
     const pkgDisc = packageDiscounts['package'];
     if (pkgDisc) {
       const final = computeDiscountedFee(p.packageFee, pkgDisc, 'package', p);
-      linesHtml += `<div class="quote-line"><span class="q-label">Package Fee</span><span class="q-value"><span class="fee-strike">$${p.packageFee.toFixed(2)}</span> <strong>$${final.toFixed(2)}</strong> <span class="unit">/mo</span>${penFor('package')}</span></div>`;
+      linesHtml += `<div class="quote-line"><span class="q-label">Package Fee</span><span class="q-value"><span class="fee-strike">$${p.packageFee.toFixed(2)}</span> <strong>$${final.toFixed(2)}</strong> <span class="unit">/mo</span></span>${penFor('package')}</div>${discDescRow(pkgDisc,'Package Fee')}`;
     } else {
-      linesHtml += `<div class="quote-line"><span class="q-label">Package Fee</span><span class="q-value">$${p.packageFee.toFixed(2)} <span class="unit">/mo</span>${penFor('package')}</span></div>`;
+      linesHtml += `<div class="quote-line"><span class="q-label">Package Fee</span><span class="q-value">$${p.packageFee.toFixed(2)} <span class="unit">/mo</span></span>${penFor('package')}</div>`;
     }
   }
   if (p.aiCopilot) {
-    linesHtml += `<div class="quote-line"><span class="q-label">AI Copilot</span><span class="q-value">$${aiCopilotFee.toFixed(2)} <span class="unit">/mo</span></span></div>`;
+    linesHtml += `<div class="quote-line"><span class="q-label">AI Assistant</span><span class="q-value">$${aiCopilotFee.toFixed(2)} <span class="unit">/mo</span></span></div>`;
   }
   if (p.hasInstances) {
     linesHtml += `<div class="quote-line"><span class="q-label">Instances Fee</span><span class="q-value">$${instFee.toFixed(2)} <span class="unit">/mo</span></span></div>`;
-    linesHtml += `<div style="display:flex;align-items:center;gap:10px;padding:6px 0"><div class="quote-stepper"><button class="qs-btn" data-action="inst-">−</button><div class="qs-val">${currentInstances}</div><button class="qs-btn" data-action="inst+">+</button></div><span class="quote-stepper-info">instances × $${p.instancePrice}${p.freeInstances?' · <span class="free-text">'+p.freeInstances+' free</span>':''}</span></div>`;
+    linesHtml += `<div style="display:flex;align-items:center;gap:10px;padding:6px 0"><div class="quote-stepper"><button class="qs-btn" data-action="inst-">−</button><input class="qs-val" type="number" min="0" value="${currentInstances}" data-input="inst" inputmode="numeric"><button class="qs-btn" data-action="inst+">+</button></div><span class="quote-stepper-info">instances × $${p.instancePrice}${p.freeInstances?' · <span class="free-text">'+p.freeInstances+' free</span>':''}</span></div>`;
   }
   // MLS Fee — with discount support
   if (!p.noMls) {
     const mlsDisc = packageDiscounts['mls'];
     if (mlsDisc) {
       const final = computeDiscountedFee(mlsFee, mlsDisc, 'mls', p);
-      linesHtml += `<div class="quote-line"><span class="q-label">MLS Fee</span><span class="q-value"><span class="fee-strike">$${mlsFee.toFixed(2)}</span> <strong>$${final.toFixed(2)}</strong> <span class="unit">/mo</span>${penFor('mls')}</span></div>`;
+      linesHtml += `<div class="quote-line"><span class="q-label">MLS Fee</span><span class="q-value"><span class="fee-strike">$${mlsFee.toFixed(2)}</span> <strong>$${final.toFixed(2)}</strong> <span class="unit">/mo</span></span>${penFor('mls')}</div>${discDescRow(mlsDisc,'MLS Fee')}`;
     } else {
-      linesHtml += `<div class="quote-line"><span class="q-label">MLS Fee</span><span class="q-value">$${mlsFee.toFixed(2)} <span class="unit">/mo</span>${penFor('mls')}</span></div>`;
+      linesHtml += `<div class="quote-line"><span class="q-label">MLS Fee</span><span class="q-value">$${mlsFee.toFixed(2)} <span class="unit">/mo</span></span>${penFor('mls')}</div>`;
     }
-    linesHtml += `<div style="display:flex;align-items:center;gap:10px;padding:6px 0"><div class="quote-stepper"><button class="qs-btn" data-action="mls-">−</button><div class="qs-val">${currentMls}</div><button class="qs-btn" data-action="mls+">+</button></div><span class="quote-stepper-info">boards × $${p.mlsPrice.toFixed(2)} · <span class="free-text">${p.freeMls} free</span></span></div>`;
+    linesHtml += `<div style="display:flex;align-items:center;gap:10px;padding:6px 0"><div class="quote-stepper"><button class="qs-btn" data-action="mls-">−</button><input class="qs-val" type="number" min="1" value="${currentMls}" data-input="mls" inputmode="numeric"><button class="qs-btn" data-action="mls+">+</button></div><span class="quote-stepper-info">boards × $${p.mlsPrice.toFixed(2)} · <span class="free-text">${p.freeMls} free</span></span></div>`;
   }
   // Onboarding (Activation) Fee — with discount support
   const actDisc = packageDiscounts['activation'];
   if (actDisc) {
     const final = computeDiscountedFee(p.onboardingFee, actDisc, 'activation', p);
-    linesHtml += `<div class="quote-line"><span class="q-label">Onboarding Fee <span class="quote-onetime-badge">One-time</span></span><span class="q-value"><span class="fee-strike">$${p.onboardingFee.toFixed(2)}</span> <strong>$${final.toFixed(2)}</strong>${penFor('activation')}</span></div>`;
+    linesHtml += `<div class="quote-line"><span class="q-label">Onboarding Fee <span class="quote-onetime-badge">One-time</span></span><span class="q-value"><span class="fee-strike">$${p.onboardingFee.toFixed(2)}</span> <strong>$${final.toFixed(2)}</strong></span>${penFor('activation')}</div>${discDescRow(actDisc,'Onboarding Fee')}`;
   } else {
-    linesHtml += `<div class="quote-line"><span class="q-label">Onboarding Fee <span class="quote-onetime-badge">One-time</span></span><span class="q-value">$${p.onboardingFee.toFixed(2)}${penFor('activation')}</span></div>`;
+    linesHtml += `<div class="quote-line"><span class="q-label">Onboarding Fee <span class="quote-onetime-badge">One-time</span></span><span class="q-value">$${p.onboardingFee.toFixed(2)}</span>${penFor('activation')}</div>`;
   }
 
   // Render selected add-ons in quote — each addon as its own section with Adjust tier button + pen icon
@@ -1686,20 +1964,20 @@ function updateAll() {
     const addonTotal = (a.price||0) * (a.qty||1);
     const onetimeBadge = a.isOneTime ? ' <span class="quote-onetime-badge">One-time</span>' : '';
     const penIcon = !a.isTBD
-      ? `<button class="fee-pen${addonDisc?' has-disc':''}" onclick="openDiscModal('addon',null,${!!addonDisc},'${a.addonId}')" title="${addonDisc?'Edit price':'Adjust price'}"><svg viewBox="0 0 16 16"><path d="M11.3 2.7a1.4 1.4 0 0 1 2 0l0 0a1.4 1.4 0 0 1 0 2L5 13l-3 1 1-3 8.3-8.3z"/></svg></button>`
+      ? `<button class="adjust-price-btn" onclick="openDiscModal('addon',null,${!!addonDisc},'${a.addonId}')">${addonDisc?'Edit Price':'Adjust Price'}</button>`
       : '';
     if (a.isTBD) {
       linesHtml += `<div class="quote-line"><span class="q-label">${a.feeName || 'Fee'}</span><span class="q-value" style="color:var(--text-muted)">TBD</span></div>`;
     } else if (addonDisc) {
       const unitLabel = a.isOneTime ? '' : ' <span class="unit">/mo</span>';
       const final = computeAddonDiscounted(addonTotal, addonDisc);
-      linesHtml += `<div class="quote-line"><span class="q-label">${a.feeName || 'Monthly Fee'}${onetimeBadge}</span><span class="q-value"><span class="fee-strike">$${addonTotal.toFixed(2)}</span> <strong>$${final.toFixed(2)}${unitLabel}</strong>${penIcon}</span></div>`;
+      linesHtml += `<div class="quote-line"><span class="q-label">${a.feeName || 'Monthly Fee'}${onetimeBadge}</span><span class="q-value"><span class="fee-strike">$${addonTotal.toFixed(2)}</span> <strong>$${final.toFixed(2)}${unitLabel}</strong></span>${penIcon}</div>${discDescRow(addonDisc, a.feeName || addonName)}`;
     } else {
       const unitLabel = a.isOneTime ? '' : ' <span class="unit">/mo</span>';
-      linesHtml += `<div class="quote-line"><span class="q-label">${a.feeName || 'Monthly Fee'}${onetimeBadge}</span><span class="q-value">$${addonTotal.toFixed(2)}${unitLabel}${penIcon}</span></div>`;
+      linesHtml += `<div class="quote-line"><span class="q-label">${a.feeName || 'Monthly Fee'}${onetimeBadge}</span><span class="q-value">$${addonTotal.toFixed(2)}${unitLabel}</span>${penIcon}</div>`;
     }
     if ((a.qty||1) > 1) {
-      linesHtml += `<div style="display:flex;align-items:center;gap:10px;padding:6px 0"><div class="quote-stepper"><button class="qs-btn" data-action="addon-minus" data-addon-id="${a.addonId}">−</button><div class="qs-val">${a.qty}</div><button class="qs-btn" data-action="addon-plus" data-addon-id="${a.addonId}">+</button></div><span class="quote-stepper-info">× $${(a.price||0).toFixed(2)}</span></div>`;
+      linesHtml += `<div style="display:flex;align-items:center;gap:10px;padding:6px 0"><div class="quote-stepper"><button class="qs-btn" data-action="addon-minus" data-addon-id="${a.addonId}">−</button><input class="qs-val" type="number" min="1" value="${a.qty}" data-input="addon" data-addon-id="${a.addonId}" inputmode="numeric"><button class="qs-btn" data-action="addon-plus" data-addon-id="${a.addonId}">+</button></div><span class="quote-stepper-info">× $${(a.price||0).toFixed(2)}</span></div>`;
     }
     // Adjust tier button — only if addon has >1 variants
     if (addonMeta && addonMeta.variants && addonMeta.variants.length > 1) {
@@ -1770,6 +2048,51 @@ document.addEventListener('click', (e) => {
   selectedAddons = selectedAddons.filter(a => a.addonId !== addonId);
   delete addonDiscounts[addonId];
   _refreshAddonsListSafe();
+  refreshCardAiBundleState();
+  updateAll();
+});
+
+// Sync the strikethrough + "+" button on the selected plan card based on AI bundle state
+function refreshCardAiBundleState() {
+  const card = selectedPlan ? document.querySelector(`.plan-card[data-plan="${selectedPlan}"]`) : null;
+  if (!card) return;
+  const removed = !hasAiBundleSelected();
+  const li = card.querySelector('.included-list li[data-ai-bundle="1"]');
+  const sub = card.querySelector('.included-list [data-ai-bundle-sub="1"] .included-sub');
+  const readdBtn = card.querySelector('.included-readd-btn[data-readd-ai="1"]');
+  if (li) li.classList.toggle('removed', removed);
+  if (sub) sub.classList.toggle('removed-sub', removed);
+  if (readdBtn) readdBtn.style.display = removed ? 'inline-flex' : 'none';
+}
+
+// Re-add AI Bundle when "+" clicked in INCLUDED section
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.included-readd-btn[data-readd-ai="1"]');
+  if (!btn) return;
+  e.stopPropagation();
+  if (!selectedPlan) return;
+  const plan = allPlans.find(p => p.id === selectedPlan);
+  if (!plan || !plan.addonBundle) return;
+  const aiBundleAddon = addons.find(a => a.id === 'ai-bundle');
+  if (!aiBundleAddon) return;
+  const variantName = AI_BUNDLE_VARIANT_FOR_PLAN[plan.id];
+  const variant = aiBundleAddon.variants.find(v => v.name === variantName);
+  if (!variant) return;
+  // Avoid duplicate
+  if (selectedAddons.some(a => a.addonId === 'ai-bundle')) return;
+  selectedAddons.push({
+    addonId: 'ai-bundle',
+    variantName: variant.name,
+    variantLabel: variant.name,
+    price: variant.price,
+    feeName: variant.feeName || 'Account Monthly Fee',
+    qty: 1,
+    isOneTime: false,
+    isTBD: false,
+    isDefault: true
+  });
+  _refreshAddonsListSafe();
+  refreshCardAiBundleState();
   updateAll();
 });
 
@@ -1800,7 +2123,7 @@ function getIncludedAddonIds(plan) {
   plan.included.forEach(inc => {
     const n = inc.name.toLowerCase();
     if (n.includes('ai platform bundle') || n.includes('ai bundle')) map.push('ai-bundle');
-    if (n.includes('ai copilot') && !inc.surcharge) map.push('ai-copilot');
+    if ((n.includes('ai assistant') || n.includes('ai copilot')) && !inc.surcharge) map.push('ai-copilot');
   });
   return map;
 }
@@ -1869,6 +2192,7 @@ document.getElementById('addonsListCard').addEventListener('click', (e) => {
     addOrUpdateAddon(addonId, v);
   }
   refreshAddonsList(document.getElementById('addonListSearch').value);
+  refreshCardAiBundleState();
   updateAll();
 });
 
@@ -2348,12 +2672,14 @@ function renderUpsellStaged() {
           : `$${mainTotal.toFixed(2)}/mo`;
         const discBadgePill = addonDisc ? `<span class="discount-pill">${upsellDiscPill(addonDisc)}</span>` : '';
         const editRemoveLine = addonDisc ? `<div class="disc-sub" style="grid-column:1/-1"><span></span><span class="disc-actions"><a onclick="openDiscModal('upsell-addon',null,true,'${a.id}')">✎ Edit</a> <a class="danger" onclick="removeDiscount('upsell-addon',null,'${a.id}')">✕ Remove</a></span></div>` : '';
+        const descRow = addonDisc ? `<div style="grid-column:1/-1">${discDescRow(addonDisc, feeName)}</div>` : '';
         feeRowsHtml += `
           <div class="us-staged-fee-row${addonDisc?' fee-discounted':''}">
             <span class="fname">${feeName} ${feeBadge}${discBadgePill}</span>
             <span class="fqty"><span class="fixed">${a.qty||1}</span> × $${unitPrice}/unit</span>
             <span class="ftotal">${totalCell}</span>
             <span class="fdisc">${discBtnInline}</span>
+            ${descRow}
           </div>
           ${editRemoveLine}
         `;
@@ -2484,6 +2810,7 @@ function renderUpsellTierValue(c) {
       ? `<span class="amt"><span class="fee-strike">$${tierUplift.toFixed(2)}</span> +$${tierFinal.toFixed(2)}<span class="mo">/mo</span></span>
          <span class="today"><span class="discount-pill">${upsellDiscPill(disc)}</span></span>
          <span class="today">$${Math.abs(todayUplift).toFixed(2)} today</span>
+         ${discDescRow(disc, 'Tier Upgrade')}
          <span class="disc-actions" style="display:block;margin-top:4px"><a onclick="openDiscModal('upsell-tier',null,true)">✎ Edit</a> <a class="danger" onclick="removeDiscount('upsell-tier')">✕ Remove</a></span>`
       : `<span class="amt">${tierUplift>=0?'+':''}$${tierUplift.toFixed(2)}<span class="mo">/mo</span></span>
          <span class="today">${todayUplift>=0?'':'-'}$${Math.abs(todayUplift).toFixed(2)} today</span>`;
@@ -2544,6 +2871,7 @@ function renderUpsellSeatsRow(c) {
     ? `<span class="amt"><span class="fee-strike">$${monthly.toFixed(2)}</span> +$${final.toFixed(2)}<span class="mo">/mo</span></span>
        <span class="today"><span class="discount-pill">${upsellDiscPill(disc)}</span></span>
        <span class="today">$${Math.abs(today).toFixed(2)} today</span>
+       ${discDescRow(disc, 'Added Seats')}
        <span class="disc-actions" style="display:block;margin-top:4px"><a onclick="openDiscModal('upsell-seat',null,true)">✎ Edit</a> <a class="danger" onclick="removeDiscount('upsell-seat')">✕ Remove</a></span>`
     : `<span class="amt">${monthly>=0?'+':''}$${monthly.toFixed(2)}<span class="mo">/mo</span></span>
        <span class="today">$${Math.abs(today).toFixed(2)} today</span>`;
@@ -2585,6 +2913,7 @@ function renderUpsellMlsRow(c) {
     ? `<span class="amt"><span class="fee-strike">$${monthly.toFixed(2)}</span> +$${final.toFixed(2)}<span class="mo">/mo</span></span>
        <span class="today"><span class="discount-pill">${upsellDiscPill(disc)}</span></span>
        <span class="today">$${Math.abs(today).toFixed(2)} today</span>
+       ${discDescRow(disc, 'Added MLS Feeds')}
        <span class="disc-actions" style="display:block;margin-top:4px"><a onclick="openDiscModal('upsell-mls',null,true)">✎ Edit</a> <a class="danger" onclick="removeDiscount('upsell-mls')">✕ Remove</a></span>`
     : `<span class="amt">${monthly>=0?'+':''}$${monthly.toFixed(2)}<span class="mo">/mo</span></span>
        <span class="today">$${Math.abs(today).toFixed(2)} today</span>`;
@@ -2974,10 +3303,11 @@ function renderUpsellSidebar(c) {
       ? `<span class="fee-strike">$${p.base.toFixed(2)}</span> +$${p.mo.toFixed(2)}<span class="mo-unit">/mo</span>`
       : `+$${p.mo.toFixed(2)}<span class="mo-unit">/mo</span>`;
     const badgeLine = p.disc ? `<div style="margin-top:4px"><span class="discount-pill">${upsellDiscPill(p.disc)}</span></div>` : '';
+    const descLine = p.disc ? discDescRow(p.disc, p.name) : '';
     const editRemove = p.disc ? `<div class="disc-actions" style="margin-top:4px;font-size:11px"><a onclick="openDiscModal(${editArg})">✎ Edit</a> <a class="danger" onclick="removeDiscount(${removeArg})">✕ Remove</a></div>` : '';
     return `
       <div class="us-pending-card">
-        <div class="us-pending-card-name">${p.name}${badgeLine}</div>
+        <div class="us-pending-card-name">${p.name}${badgeLine}${descLine}</div>
         <div class="us-pending-card-amounts">
           <div class="us-pending-card-mo">${moDisplay}</div>
           <div class="us-pending-card-next">+$${p.nextBill.toFixed(2)} next bill</div>
@@ -3227,7 +3557,7 @@ function renderReview() {
   if (!selectedPlan) return;
   const p = allPlans.find(pl=>pl.id===selectedPlan);
   const extraSeats = Math.max(0, currentSeats - p.includedSeats);
-  const seatsFee = extraSeats * (p.seatPrice||0);
+  const seatsFee = tieredSeatsFee(p, currentSeats);
   const extraMls = p.noMls ? 0 : Math.max(0, currentMls - p.freeMls);
   const mlsFee = p.noMls ? 0 : extraMls * (p.mlsPrice||0);
   const extraInst = p.hasInstances ? Math.max(0, currentInstances - (p.freeInstances||0)) : 0;
@@ -3282,7 +3612,7 @@ function renderReview() {
   if (!p.noSeatFee) rows += `<div class="review-table-row"><span><span class="row-name">${p.name}<br><span class="row-sub">Seat Fee</span></span></span><span>Monthly</span><span>${feeAmtHtml(seatsFee, packageDiscounts['seat'], 'seat')}</span></div>`;
   if (!p.noPackageFee) rows += `<div class="review-table-row"><span>${p.name}</span><span>Monthly</span><span>${feeAmtHtml(p.packageFee, packageDiscounts['package'], 'package')}</span></div>`;
   if (!p.noMls) rows += `<div class="review-table-row"><span><span class="row-name">${p.name}<br><span class="row-sub">MLS Fee</span></span></span><span>Monthly</span><span>${feeAmtHtml(mlsFee, packageDiscounts['mls'], 'mls')}</span></div>`;
-  if (p.aiCopilot) rows += `<div class="review-table-row"><span>AI Copilot</span><span>Monthly</span><span>$${aiCopilotFee.toFixed(2)}</span></div>`;
+  if (p.aiCopilot) rows += `<div class="review-table-row"><span>AI Assistant</span><span>Monthly</span><span>$${aiCopilotFee.toFixed(2)}</span></div>`;
   if (p.hasInstances) rows += `<div class="review-table-row"><span>Instances Fee</span><span>Monthly</span><span>$${instFee.toFixed(2)}</span></div>`;
   selectedAddons.forEach(a => {
     const addonMeta = addons.find(ad=>ad.id===a.addonId);
@@ -3400,7 +3730,7 @@ function showModal() {
   if (!selectedPlan) return;
   const p = allPlans.find(pl=>pl.id===selectedPlan);
   const extraSeats = Math.max(0, currentSeats - p.includedSeats);
-  const seatsFee = extraSeats * (p.seatPrice||0);
+  const seatsFee = tieredSeatsFee(p, currentSeats);
   const extraMls = p.noMls ? 0 : Math.max(0, currentMls - p.freeMls);
   const mlsFee = p.noMls ? 0 : extraMls * (p.mlsPrice||0);
   const extraInst = p.hasInstances ? Math.max(0, currentInstances - (p.freeInstances||0)) : 0;
@@ -3523,7 +3853,7 @@ let discModalCtx = null;   // {kind:'main'|'addon', feeKey?, addonId?, isEdit}
 
 function getFeeBase(feeKey, plan) {
   if (feeKey === 'package') return plan.noPackageFee ? 0 : (plan.packageFee||0);
-  if (feeKey === 'seat') return Math.max(0, currentSeats - (plan.includedSeats||0)) * (plan.seatPrice||0);
+  if (feeKey === 'seat') return tieredSeatsFee(plan, currentSeats);
   if (feeKey === 'mls') return plan.noMls ? 0 : Math.max(0, currentMls - (plan.freeMls||0)) * (plan.mlsPrice||0);
   if (feeKey === 'activation') return plan.onboardingFee || 0;
   if (feeKey === 'aibundle') return plan.addonPrice || 0;
@@ -3548,6 +3878,17 @@ function computeAddonDiscounted(base, disc) {
   if (disc.type === 'percent') return Math.max(0, base * (1 - Math.min(disc.value,100)/100));
   return Math.max(0, base - disc.value);
 }
+
+function discDescRow(disc, feeName) {
+  if (!disc) return '';
+  const valStr = disc.type === 'percent' ? `${disc.value}%` : `$${(+disc.value).toFixed(2)}`;
+  let durStr = ' permanently';
+  if (disc.duration === '1month') durStr = ' for 1 month';
+  else if (disc.duration === 'months') durStr = ` for ${disc.months||2} months`;
+  return `<div class="disc-desc">A discounted price of ${valStr} was applied to ${feeName}${durStr}</div>`;
+}
+// Back-compat shim (no longer renders inline pill)
+function durationBadge() { return ''; }
 
 function discPillText(d) {
   return d.type === 'fixed' ? '$' + d.value.toFixed(2) + ' OFF' : d.value + '% OFF';
@@ -3602,7 +3943,7 @@ function getOriginalPriceForKind(kind, feeKey, addonId) {
   if (kind === 'main' && selectedPlan) {
     const p = allPlans.find(pl => pl.id === selectedPlan);
     if (feeKey === 'package') return p.noPackageFee ? 0 : (p.packageFee||0);
-    if (feeKey === 'seat') return Math.max(0, currentSeats - (p.includedSeats||0)) * (p.seatPrice||0);
+    if (feeKey === 'seat') return tieredSeatsFee(p, currentSeats);
     if (feeKey === 'mls') return p.noMls ? 0 : Math.max(0, currentMls - (p.freeMls||0)) * (p.mlsPrice||0);
     if (feeKey === 'activation') return p.onboardingFee || 0;
     if (feeKey === 'aibundle') return p.addonPrice || 0;
@@ -3820,7 +4161,7 @@ function renderAdjTierList(addon, currentVariant, selectedVariant, qty) {
               <div class="val">${qty}</div>
               <button data-adj-qty="+">+</button>
             </span>
-            <span class="adjtier-stepper-info">× $${v.price}/unit</span>
+            <span class="adjtier-stepper-info">× $${v.price}/${subLabel}</span>
           </div>
         </div>
       `;
@@ -3962,17 +4303,21 @@ function openDiscModal(kind, feeKey, isEdit, addonId) {
   else if (kind === 'addon') existing = addonDiscounts[addonId];
   else if (feeKey) existing = packageDiscounts[feeKey];
 
-  document.getElementById('discRole').value = currentTier;
   if (existing) {
     document.getElementById('discType').value = existing.type;
     document.getElementById('discValue').value = existing.value;
     document.getElementById('discReason').value = existing.reason || '';
+    document.getElementById('discDuration').value = existing.duration || 'permanent';
+    document.getElementById('discMonths').value = String(existing.months || 2);
   } else {
     document.getElementById('discType').value = 'fixed';
     document.getElementById('discValue').value = 10;
     document.getElementById('discReason').value = '';
+    document.getElementById('discDuration').value = 'permanent';
+    document.getElementById('discMonths').value = '2';
   }
   updateDiscValueUI();
+  updateDiscDurationUI();
   refreshDiscAlerts();
   discGoToStep1();
   document.getElementById('discModalOverlay').classList.add('show');
@@ -4042,36 +4387,29 @@ function updateDiscValueUI() {
 }
 
 function refreshDiscAlerts(silent) {
-  const tier = DISC_TIERS[document.getElementById('discRole').value];
-  const type = document.getElementById('discType').value;
   const val = parseFloat(document.getElementById('discValue').value) || 0;
   const alertsEl = document.getElementById('discAlerts');
   const btnNext = document.getElementById('discBtnApply') || document.getElementById('discBtnNext');
-  if (!btnNext) return !blocked;
-  let html = '';
   let blocked = false;
-
-  if (tier.maxPct === 0 && tier.maxAmt === 0) {
-    html = `<div class="disc-alert danger">⚠ This role has no discount authority. Discounts cannot be applied.</div>`;
-    blocked = true;
-  } else if (val <= 0) {
-    blocked = true;
-  } else if (type === 'percent' && val > tier.maxPct) {
-    html = `<div class="disc-alert warn">⚠ Discount ${val}% exceeds your tier limit (${tier.maxPct}%). Requires higher-tier approval.</div>`;
-  } else if (type === 'fixed' && val > tier.maxAmt) {
-    html = `<div class="disc-alert warn">⚠ Discount $${val} exceeds your tier limit ($${tier.maxAmt}). Requires higher-tier approval.</div>`;
-  }
-
-  alertsEl.innerHTML = html;
+  if (!btnNext) return !blocked;
+  if (val <= 0) blocked = true;
+  alertsEl.innerHTML = '';
   btnNext.disabled = blocked;
   return !blocked;
+}
+
+function updateDiscDurationUI() {
+  const dur = document.getElementById('discDuration').value;
+  document.getElementById('discMonthsRow').style.display = (dur === 'months') ? 'block' : 'none';
 }
 
 function discCommit() {
   const type = document.getElementById('discType').value;
   const val = parseFloat(document.getElementById('discValue').value) || 0;
   const reason = document.getElementById('discReason').value.trim();
-  const disc = {type, value: val, reason};
+  const duration = document.getElementById('discDuration').value;
+  const months = duration === 'months' ? parseInt(document.getElementById('discMonths').value, 10) || 2 : null;
+  const disc = {type, value: val, reason, duration, months};
   const k = discModalCtx.kind;
 
   if (k === 'upsell-tier') upsellDiscounts.tier = disc;
@@ -4082,7 +4420,6 @@ function discCommit() {
   else if (k === 'addon') addonDiscounts[discModalCtx.addonId] = disc;
   else packageDiscounts[discModalCtx.feeKey] = disc;
 
-  currentTier = document.getElementById('discRole').value;
   closeDiscModal();
   // Refresh appropriate views
   if (k && k.startsWith('upsell-') && upsellCustomer) {
@@ -4114,7 +4451,7 @@ function removeDiscount(kind, feeKey, addonId) {
 // Wire modal inputs
 document.getElementById('discType').addEventListener('change', () => { updateDiscValueUI(); refreshDiscAlerts(); });
 document.getElementById('discValue').addEventListener('input', () => refreshDiscAlerts());
-document.getElementById('discRole').addEventListener('change', () => refreshDiscAlerts());
+document.getElementById('discDuration').addEventListener('change', updateDiscDurationUI);
 document.getElementById('discModalOverlay').addEventListener('click', e => {
   if (e.target.id === 'discModalOverlay') closeDiscModal();
 });
@@ -4204,6 +4541,285 @@ document.getElementById('upsellDoneDashboard').addEventListener('click', () => {
 
 // Snapshot original sidebar HTML for restoring on upsell reset
 const ORIGINAL_QUOTE_FILLED_HTML = document.getElementById('quoteFilled').innerHTML;
+
+// ============ DASHBOARD ============
+const DASH_AGENTS = ['Sarah Chen','John Martinez','Emily Park','David Kim','Linda Foster','Mark Thompson','Jessica Liu','Robert Singh','Ashley Brooks','Michael Tran'];
+const DASH_ADMINS = ['Admin: Wendy Jin','Admin: Mike O\'Brien','Admin: Priya Sharma'];
+const DASH_PLANS_LBL = ['Lofty Agent','Lofty Team','Lofty Broker 15','Lofty Broker 50','Lofty Enterprise','Multi-Team (IDX)'];
+// Status codes per backend spec: 0 Undefine, 1 Created, 2 Valid, 3 Upgraded, 4 Invalid, 5 Paid_End, 6 Price_Change, 7 Pause
+const DASH_STATUSES = ['Undefine','Created','Valid','Upgraded','Invalid','Paid_End','Price_Change','Pause'];
+
+function fmtDate(d){return d.toISOString().slice(0,10)+' '+d.toTimeString().slice(0,5);}
+function dashRandPick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+// Build 15 mock orders. Times are fixed offsets from a stable "now" so prototype is deterministic.
+const DASH_BASE_NOW = new Date('2026-06-09T10:00:00Z');
+let dashOrders = (function buildMockOrders(){
+  const list = [];
+  const samples = [
+    {agent:'Sarah Chen', plan:'Lofty Team', seats:5, status:'Valid', monthly:909, buyer:'Premium', seller:'Standard', zip:1, sphere:'Yes', otherFee:49, disc:0, mgmt:50, duration:'12 mo', operate:'sarah.chen@lofty.com', site:'Full Website'},
+    {agent:'John Martinez', plan:'Lofty Broker 15', seats:15, status:'Valid', monthly:1399, buyer:'Premium', seller:'Premium', zip:3, sphere:'Yes', otherFee:120, disc:100, mgmt:80, duration:'24 mo', operate:'john.martinez@lofty.com', site:'Hyperlocal'},
+    {agent:'Emily Park', plan:'Lofty Agent', seats:2, status:'Created', monthly:419, buyer:'-', seller:'Standard', zip:0, sphere:'No', otherFee:0, disc:0, mgmt:0, duration:'12 mo', operate:'emily.park@lofty.com', site:'Full Website'},
+    {agent:'David Kim', plan:'Lofty Enterprise', seats:120, status:'Upgraded', monthly:4140, buyer:'Premium', seller:'Premium', zip:5, sphere:'Yes', otherFee:299, disc:500, mgmt:200, duration:'36 mo', operate:'wendy.jin@lofty.com', site:'Full Website'},
+    {agent:'Linda Foster', plan:'Lofty Team', seats:7, status:'Valid', monthly:1187, buyer:'Standard', seller:'Standard', zip:2, sphere:'No', otherFee:79, disc:50, mgmt:50, duration:'12 mo', operate:'linda.foster@lofty.com', site:'Hyperlocal'},
+    {agent:'Mark Thompson', plan:'Lofty Broker 50', seats:50, status:'Created', monthly:2299, buyer:'Premium', seller:'Premium', zip:4, sphere:'Yes', otherFee:200, disc:0, mgmt:100, duration:'24 mo', operate:'mark.thompson@lofty.com', site:'Full Website'},
+    {agent:'Jessica Liu', plan:'Lofty Agent', seats:3, status:'Invalid', monthly:558, buyer:'-', seller:'-', zip:0, sphere:'No', otherFee:0, disc:0, mgmt:0, duration:'12 mo', operate:'jessica.liu@lofty.com', site:'-'},
+    {agent:'Robert Singh', plan:'Multi-Team (IDX)', seats:50, status:'Valid', monthly:1750, buyer:'-', seller:'-', zip:0, sphere:'No', otherFee:150, disc:200, mgmt:80, duration:'24 mo', operate:'mike.obrien@lofty.com', site:'IDX Website'},
+    {agent:'Ashley Brooks', plan:'Lofty Team', seats:5, status:'Pause', monthly:909, buyer:'Standard', seller:'Standard', zip:1, sphere:'No', otherFee:0, disc:0, mgmt:50, duration:'12 mo', operate:'ashley.brooks@lofty.com', site:'Full Website'},
+    {agent:'Michael Tran', plan:'Lofty Broker 15', seats:18, status:'Upgraded', monthly:1693, buyer:'Premium', seller:'Standard', zip:2, sphere:'Yes', otherFee:120, disc:0, mgmt:80, duration:'12 mo', operate:'michael.tran@lofty.com', site:'Hyperlocal'},
+    {agent:'Sarah Chen', plan:'Lofty Agent', seats:2, status:'Paid_End', monthly:419, buyer:'-', seller:'-', zip:0, sphere:'No', otherFee:0, disc:0, mgmt:0, duration:'12 mo', operate:'sarah.chen@lofty.com', site:'-'},
+    {agent:'John Martinez', plan:'Lofty Team', seats:5, status:'Valid', monthly:909, buyer:'Premium', seller:'Premium', zip:2, sphere:'Yes', otherFee:79, disc:0, mgmt:50, duration:'12 mo', operate:'john.martinez@lofty.com', site:'Hyperlocal'},
+    {agent:'Emily Park', plan:'Lofty Enterprise', seats:100, status:'Price_Change', monthly:3500, buyer:'Premium', seller:'Premium', zip:5, sphere:'Yes', otherFee:299, disc:1000, mgmt:200, duration:'36 mo', operate:'priya.sharma@lofty.com', site:'Full Website'},
+    {agent:'David Kim', plan:'Lofty Broker 50', seats:55, status:'Valid', monthly:2599, buyer:'Premium', seller:'Premium', zip:3, sphere:'Yes', otherFee:200, disc:300, mgmt:100, duration:'24 mo', operate:'david.kim@lofty.com', site:'Full Website'},
+    {agent:'Linda Foster', plan:'Lofty Agent', seats:2, status:'Undefine', monthly:419, buyer:'-', seller:'Standard', zip:1, sphere:'No', otherFee:49, disc:0, mgmt:0, duration:'12 mo', operate:'linda.foster@lofty.com', site:'Hyperlocal'},
+  ];
+  samples.forEach((s,i) => {
+    const created = new Date(DASH_BASE_NOW.getTime() - (samples.length-i)*36*3600*1000); // each older than next
+    const started = new Date(created.getTime() + 24*3600*1000);
+    const next = new Date(started.getTime() + 30*24*3600*1000);
+    const end = new Date(started.getTime() + (parseInt(s.duration)*30*24*3600*1000));
+    list.push({
+      teamAgentName: s.agent,
+      orderID: String(433705 - i * 137 - (i*i*23 % 200)),
+      status: s.status,
+      createTime: fmtDate(created),
+      startTime: (s.status === 'Created' || s.status === 'Undefine') ? '—' : fmtDate(started),
+      nextRecurringTime: (s.status === 'Valid' || s.status === 'Upgraded' || s.status === 'Price_Change') ? fmtDate(next) : '—',
+      endTime: (s.status === 'Created' || s.status === 'Undefine') ? '—' : fmtDate(end),
+      upsellOwner: i % 3 === 0 ? s.agent : '—',
+      relatedOrder: i % 4 === 0 && i > 0 ? String(433705 - (i-1) * 137 - ((i-1)*(i-1)*23 % 200)) : '—',
+      monthlyPayment: '$' + s.monthly.toLocaleString(),
+      siteService: s.site,
+      crmSubscription: s.plan,
+      seatNum: s.seats,
+      buyerPackage: s.buyer,
+      sellerPackage: s.seller,
+      zipcodeDominator: s.zip ? String(s.zip) : '—',
+      sphereLoudspeaker: s.sphere,
+      otherMonthlyCharge: s.otherFee ? '$' + s.otherFee : '—',
+      planDiscount: s.disc ? '$' + s.disc : '—',
+      managementFee: s.mgmt ? '$' + s.mgmt : '—',
+      contractDuration: s.duration,
+      operateBy: s.operate
+    });
+  });
+  return list.reverse(); // most recent first
+})();
+
+function dashStatusBadge(s) {
+  const cls = s.toLowerCase();
+  // Convert PAID_END / Paid_End → "Paid End" for display
+  const display = s.replace(/_/g, ' ');
+  return `<span class="dash-status ${cls}">${display}</span>`;
+}
+
+function renderDashboard() {
+  const q = document.getElementById('dashSearch').value.trim().toLowerCase();
+  const fs = document.getElementById('dashFilterStatus').value;
+  const fa = document.getElementById('dashFilterAgent').value;
+  const filtered = dashOrders.filter(o => {
+    if (fs && o.status !== fs) return false;
+    if (fa && o.teamAgentName !== fa) return false;
+    if (q) {
+      const hay = (o.orderID + ' ' + o.teamAgentName + ' ' + o.operateBy + ' ' + o.crmSubscription).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  const tbody = document.getElementById('dashTbody');
+  tbody.innerHTML = filtered.map(o => `
+    <tr data-order-id="${o.orderID}">
+      <td><a class="dash-agent-link" href="#" onclick="event.preventDefault()" title="View ${o.teamAgentName} detail (coming soon)">${o.teamAgentName}</a></td>
+      <td><strong>${o.orderID}</strong></td>
+      <td>${dashStatusBadge(o.status)}</td>
+      <td>${o.createTime}</td>
+      <td>${o.startTime}</td>
+      <td>${o.nextRecurringTime}</td>
+      <td>${o.endTime}</td>
+      <td>${o.upsellOwner}</td>
+      <td>${o.relatedOrder}</td>
+      <td>${o.monthlyPayment}</td>
+      <td>${o.siteService}</td>
+      <td>${o.crmSubscription}</td>
+      <td>${o.seatNum}</td>
+      <td>${o.buyerPackage}</td>
+      <td>${o.sellerPackage}</td>
+      <td>${o.zipcodeDominator}</td>
+      <td>${o.sphereLoudspeaker}</td>
+      <td>${o.otherMonthlyCharge}</td>
+      <td>${o.planDiscount}</td>
+      <td>${o.managementFee}</td>
+      <td>${o.contractDuration}</td>
+      <td>${o.operateBy}</td>
+    </tr>
+  `).join('');
+  document.getElementById('dashRowCount').textContent = `${filtered.length} order${filtered.length!==1?'s':''}`;
+  // Update stats
+  document.getElementById('statTotal').textContent = dashOrders.length;
+  document.getElementById('statActive').textContent = dashOrders.filter(o => o.status === 'Valid').length;
+  document.getElementById('statPending').textContent = dashOrders.filter(o => o.status === 'Created').length;
+  // MRR = revenue from currently-billing orders: Valid + Upgraded + Price_Change
+  const mrr = dashOrders.filter(o => ['Valid','Upgraded','Price_Change'].includes(o.status)).reduce((sum,o) => sum + parseInt(o.monthlyPayment.replace(/[^\d]/g,'')||0), 0);
+  document.getElementById('statMrr').textContent = '$' + mrr.toLocaleString();
+}
+
+function initDashboardFilters() {
+  // populate agent filter
+  const agents = [...new Set(dashOrders.map(o => o.teamAgentName))].sort();
+  const sel = document.getElementById('dashFilterAgent');
+  agents.forEach(a => {
+    const o = document.createElement('option');
+    o.value = a; o.textContent = a;
+    sel.appendChild(o);
+  });
+}
+
+const DASH_EXPORT_HEADERS = ['Team Agent Name','Order ID','Status','Create Time','Start Time','Next Recurring Time','End Time','Upsell Owner','Related Order','Monthly Payment','Site Service','CRM Subscription','Seat Num','Buyer Package','Seller Package','Zipcode Dominator','Sphere Loudspeaker','Other Monthly Charge','Plan Discount','Management Fee','Contract Duration','Operate By'];
+const DASH_EXPORT_KEYS = ['teamAgentName','orderID','status','createTime','startTime','nextRecurringTime','endTime','upsellOwner','relatedOrder','monthlyPayment','siteService','crmSubscription','seatNum','buyerPackage','sellerPackage','zipcodeDominator','sphereLoudspeaker','otherMonthlyCharge','planDiscount','managementFee','contractDuration','operateBy'];
+
+function getFilteredDashRows() {
+  const q = document.getElementById('dashSearch').value.trim().toLowerCase();
+  const fs = document.getElementById('dashFilterStatus').value;
+  const fa = document.getElementById('dashFilterAgent').value;
+  return dashOrders.filter(o => {
+    if (fs && o.status !== fs) return false;
+    if (fa && o.teamAgentName !== fa) return false;
+    if (q) {
+      const hay = (o.orderID + ' ' + o.teamAgentName + ' ' + o.operateBy + ' ' + o.crmSubscription).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function downloadDashboardCsv() {
+  const rows = getFilteredDashRows();
+  function esc(v){const s=String(v??'');return /[",\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;}
+  const csv = [DASH_EXPORT_HEADERS.map(esc).join(',')].concat(rows.map(r => DASH_EXPORT_KEYS.map(k => esc(r[k])).join(','))).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  triggerBlobDownload(blob, `lofty-orders-${new Date().toISOString().slice(0,10)}.csv`);
+}
+
+function downloadDashboardXlsx() {
+  if (typeof XLSX === 'undefined') {
+    alert('Excel export library not loaded. Falling back to CSV.');
+    return downloadDashboardCsv();
+  }
+  const rows = getFilteredDashRows();
+  const aoa = [DASH_EXPORT_HEADERS].concat(rows.map(r => DASH_EXPORT_KEYS.map(k => r[k] ?? '')));
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  // Column widths — auto-size based on header length, capped
+  ws['!cols'] = DASH_EXPORT_HEADERS.map(h => ({wch: Math.max(12, Math.min(h.length + 4, 28))}));
+  // Freeze header row
+  ws['!freeze'] = {xSplit:0, ySplit:1};
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Orders');
+  XLSX.writeFile(wb, `lofty-orders-${new Date().toISOString().slice(0,10)}.xlsx`);
+}
+
+function triggerBlobDownload(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+// Simulated live updates: every 5s, randomly flip one Created → Valid (customer paid)
+function startDashboardLiveUpdates() {
+  setInterval(() => {
+    if (document.body.classList.contains('mode-dashboard')) {
+      const createds = dashOrders.filter(o => o.status === 'Created');
+      if (createds.length && Math.random() < 0.5) {
+        const pick = createds[Math.floor(Math.random()*createds.length)];
+        pick.status = 'Valid';
+        pick.startTime = fmtDate(new Date());
+        renderDashboard();
+        const row = document.querySelector(`tr[data-order-id="${pick.orderID}"]`);
+        if (row) row.classList.add('new-order');
+      }
+    }
+  }, 5000);
+}
+
+// Nav toggle: order vs dashboard
+function setMode(mode) {
+  const isDash = mode === 'dashboard';
+  document.body.classList.toggle('mode-dashboard', isDash);
+  document.getElementById('navOrderBtn').classList.toggle('active', !isDash);
+  document.getElementById('navDashboardBtn').classList.toggle('active', isDash);
+  document.getElementById('topNavCrumb').textContent = isDash ? 'Dashboard' : 'New Order';
+  if (isDash) {
+    renderDashboard();
+  }
+}
+document.getElementById('navOrderBtn').addEventListener('click', () => setMode('order'));
+document.getElementById('navDashboardBtn').addEventListener('click', () => setMode('dashboard'));
+document.getElementById('dashSearch').addEventListener('input', renderDashboard);
+document.getElementById('dashFilterStatus').addEventListener('change', renderDashboard);
+document.getElementById('dashFilterAgent').addEventListener('change', renderDashboard);
+// Download dropdown toggle + actions
+(function wireDownloadDropdown(){
+  const toggleBtn = document.getElementById('downloadToggleBtn');
+  const menu = document.getElementById('downloadMenu');
+  toggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    menu.classList.toggle('open');
+  });
+  menu.addEventListener('click', (e) => {
+    const item = e.target.closest('.dash-download-item');
+    if (!item) return;
+    const fmt = item.dataset.fmt;
+    menu.classList.remove('open');
+    if (fmt === 'csv') downloadDashboardCsv();
+    else if (fmt === 'xlsx') downloadDashboardXlsx();
+  });
+  // Close on outside click
+  document.addEventListener('click', (e) => {
+    if (!menu.contains(e.target) && e.target !== toggleBtn) menu.classList.remove('open');
+  });
+})();
+
+// Hook: when an order is placed in the New Order flow, prepend a fake new entry to dashOrders
+function addOrderToDashboard(planName, monthly, seats, operatorName) {
+  const now = new Date();
+  const id = String(434000 + Math.floor(Math.random()*9000));
+  const order = {
+    teamAgentName: operatorName || dashRandPick(DASH_AGENTS),
+    orderID: id,
+    status: 'Created',
+    createTime: fmtDate(now),
+    startTime: '—',
+    nextRecurringTime: '—',
+    endTime: '—',
+    upsellOwner: '—',
+    relatedOrder: '—',
+    monthlyPayment: '$' + (monthly||0).toLocaleString(),
+    siteService: 'Full Website',
+    crmSubscription: planName || '—',
+    seatNum: seats || 1,
+    buyerPackage: '-',
+    sellerPackage: '-',
+    zipcodeDominator: '—',
+    sphereLoudspeaker: 'No',
+    otherMonthlyCharge: '—',
+    planDiscount: '—',
+    managementFee: '—',
+    contractDuration: '12 mo',
+    operateBy: operatorName || dashRandPick(DASH_AGENTS)
+  };
+  dashOrders.unshift(order);
+  if (document.body.classList.contains('mode-dashboard')) {
+    renderDashboard();
+    setTimeout(() => {
+      const row = document.querySelector(`tr[data-order-id="${id}"]`);
+      if (row) row.classList.add('new-order');
+    }, 50);
+  }
+}
+
+initDashboardFilters();
+startDashboardLiveUpdates();
 
 // ============ INIT ============
 renderPlanCards();
